@@ -1,5 +1,5 @@
 {
-    "dart.flutterSdkPath": "/Users/ratishjain/fvm/versions/3.0.5",
+    "dart.flutterSdkPath": "/Users/kaushalpadaliya/Apps/Budget-Tracker-App/.fvm/flutter_sdk",
     // Remove .fvm files from search
     "search.exclude": {
         "**/.fvm": true
