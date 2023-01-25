@@ -1,3 +1,5 @@
+import 'package:budget_tracker/screens/login_options/login_opt.dart';
+import 'package:budget_tracker/screens/login_options/questions.dart';
 import 'package:budget_tracker/screens/registeration/sign_in.dart';
 import 'package:budget_tracker/screens/registeration/sign_up.dart';
 import 'package:budget_tracker/widgets/colors.dart';
@@ -18,11 +20,13 @@ class MyApp extends StatelessWidget {
         colorScheme:
             ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
       ),
-      home: SignIn(),
-      initialRoute: '/signup',
+      home: Login_opt(),
+      initialRoute: '/login_opt',
       routes: {
+        '/login_opt': (context) => Login_opt(),
         '/signin': (context) => SignIn(),
         '/signup': (context) => SignUp(),
+        '/questions': (context) => Que(),
       },
     );
   }
