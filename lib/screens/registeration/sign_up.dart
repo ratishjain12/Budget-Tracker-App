@@ -118,7 +118,7 @@ class _SignUpState extends State<SignUp> {
                       ),
                       CustomButton(
                         onPressed: () {
-                          print("button clicked");
+                          Navigator.pushNamed(context, '/questions');
                         },
                         child: Text(
                           "Sign up",
