@@ -67,7 +67,7 @@ class _Login_optState extends State<Login_opt> {
                       height: screenHeight * 0.03,
                     ),
                     Container(
-                      child: Text('-------------------OR-------------------'),
+                      child: Text('------------------- OR -------------------'),
                     ),
                     SizedBox(
                       height: screenHeight * 0.03,

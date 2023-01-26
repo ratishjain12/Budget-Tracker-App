@@ -4,6 +4,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
+import '../../services/auth_service.dart';
+
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
 
@@ -12,117 +14,145 @@ class SignIn extends StatefulWidget {
 }
 
 class _SignInState extends State<SignIn> {
+  TextEditingController _email = TextEditingController();
+  TextEditingController _password = TextEditingController();
+  AuthService authService = AuthService();
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      backgroundColor: AppColors.primaryColor,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Form(
-            key: _formKey,
-            child: Column(
-              children: [
-                SizedBox(
-                  height: screenHeight * 0.1,
-                ),
-                Center(
-                  child: Text(
-                    "Budget Tracker",
-                    style: TextStyle(
-                      fontSize: 24,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: screenHeight * 0.03,
-                ),
-                Center(
-                  child: Container(
-                    width: screenWidth * 0.6,
-                    height: screenHeight * 0.18,
-                    child: Image.asset(
-                      "assets/images/banner_img.png",
-                      fit: BoxFit.fill,
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  height: screenHeight * 0.1,
-                ),
-                Container(
-                  width: screenWidth * 0.75,
+    return _isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            backgroundColor: AppColors.primaryColor,
+            body: SingleChildScrollView(
+              child: SafeArea(
+                child: Form(
+                  key: _formKey,
                   child: Column(
                     children: [
-                      Center(
-                          child: Text(
-                        "Sign in",
-                        style: TextStyle(
-                          fontSize: 24,
-                          fontWeight: FontWeight.bold,
-                        ),
-                      )),
                       SizedBox(
-                        height: screenHeight * 0.05,
+                        height: screenHeight * 0.1,
                       ),
-                      TextFormField(
-                        decoration: InputDecoration(
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
+                      Center(
+                        child: Text(
+                          "Budget Tracker",
+                          style: TextStyle(
+                            fontSize: 24,
                           ),
-                          prefixIcon: Icon(
-                            Icons.email,
-                            color: Colors.grey,
-                          ),
-                          hintText: "Enter Email",
                         ),
                       ),
                       SizedBox(
                         height: screenHeight * 0.03,
                       ),
-                      TextFormField(
-                        obscureText: true,
-                        decoration: InputDecoration(
-                          prefixIcon: Icon(
-                            Icons.lock,
-                            color: Colors.grey,
+                      Center(
+                        child: Container(
+                          width: screenWidth * 0.6,
+                          height: screenHeight * 0.18,
+                          child: Image.asset(
+                            "assets/images/banner_img.png",
+                            fit: BoxFit.fill,
                           ),
-                          border: OutlineInputBorder(
-                            borderRadius: BorderRadius.circular(18),
-                          ),
-                          hintText: "Enter Password",
                         ),
                       ),
                       SizedBox(
-                        height: screenHeight * 0.05,
+                        height: screenHeight * 0.1,
                       ),
-                      CustomButton(
-                        onPressed: () {
-                          print("button clicked");
-                        },
-                        child: Text(
-                          "Login",
-                          style: TextStyle(
-                            fontSize: 17,
-                          ),
+                      Container(
+                        width: screenWidth * 0.75,
+                        child: Column(
+                          children: [
+                            Center(
+                                child: Text(
+                              "Sign in",
+                              style: TextStyle(
+                                fontSize: 24,
+                                fontWeight: FontWeight.bold,
+                              ),
+                            )),
+                            SizedBox(
+                              height: screenHeight * 0.05,
+                            ),
+                            TextFormField(
+                              controller: _email,
+                              decoration: InputDecoration(
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                prefixIcon: Icon(
+                                  Icons.email,
+                                  color: Colors.grey,
+                                ),
+                                hintText: "Enter Email",
+                              ),
+                            ),
+                            SizedBox(
+                              height: screenHeight * 0.03,
+                            ),
+                            TextFormField(
+                              controller: _password,
+                              obscureText: true,
+                              decoration: InputDecoration(
+                                prefixIcon: Icon(
+                                  Icons.lock,
+                                  color: Colors.grey,
+                                ),
+                                border: OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(18),
+                                ),
+                                hintText: "Enter Password",
+                              ),
+                            ),
+                            SizedBox(
+                              height: screenHeight * 0.05,
+                            ),
+                            CustomButton(
+                              onPressed: () {
+                                login();
+                              },
+                              child: Text(
+                                "Login",
+                                style: TextStyle(
+                                  fontSize: 17,
+                                ),
+                              ),
+                            ),
+                            TextButton(
+                              onPressed: () {
+                                Navigator.pushNamed(context, '/signup');
+                              },
+                              child: Text("Dont have a account? Sign up"),
+                            )
+                          ],
                         ),
                       ),
-                      TextButton(
-                        onPressed: () {
-                          Navigator.pushNamed(context, '/signup');
-                        },
-                        child: Text("Dont have a account? Sign up"),
-                      )
                     ],
                   ),
                 ),
-              ],
+              ),
             ),
-          ),
-        ),
-      ),
-    );
+          );
+  }
+
+  login() async {
+    if (_formKey.currentState!.validate()) {
+      setState(() {
+        _isLoading = true;
+      });
+      await authService
+          .emailPasswordSignIn(_email.text, _password.text)
+          .then((value) {
+        if (value == true) {
+          setState(() {
+            _isLoading = false;
+          });
+          Navigator.pushNamed(context, '/questions');
+        }
+      });
+    }
   }
 }
