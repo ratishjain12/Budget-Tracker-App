@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -20,6 +21,11 @@ class Que extends StatefulWidget {
 class _QueState extends State<Que> {
   String dropdownValue = options.first;
   final _pageController = PageController(initialPage: 0);
+
+  TextEditingController _incomeText = TextEditingController();
+  TextEditingController _choice = TextEditingController();
+  TextEditingController _ = TextEditingController();
+
   final _FormKey = GlobalKey<FormState>();
 
   @override
@@ -66,7 +72,7 @@ class _QueState extends State<Que> {
                       SizedBox(
                         width: 300,
                         child: TextFormField(
-                          obscureText: true,
+                          controller: _incomeText,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(18),
@@ -87,6 +93,8 @@ class _QueState extends State<Que> {
                                 style: TextStyle(fontSize: 17),
                               ),
                               onPressed: (() {
+                                FocusScope.of(context)
+                                    .requestFocus(FocusNode());
                                 _pageController.nextPage(
                                     duration: Duration(seconds: 1),
                                     curve: Curves.easeInOut);
@@ -119,7 +127,7 @@ class _QueState extends State<Que> {
                       SizedBox(
                         width: 300,
                         child: TextFormField(
-                          obscureText: true,
+                          controller: _choice,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
                               borderRadius: BorderRadius.circular(18),
@@ -140,9 +148,16 @@ class _QueState extends State<Que> {
                                 style: TextStyle(fontSize: 17),
                               ),
                               onPressed: (() {
-                                _pageController.nextPage(
-                                    duration: Duration(seconds: 1),
-                                    curve: Curves.easeInOut);
+                                if (checkForChoice()) {
+                                  FocusScope.of(context)
+                                      .requestFocus(FocusNode());
+                                  _pageController.nextPage(
+                                      duration: Duration(seconds: 1),
+                                      curve: Curves.easeInOut);
+                                } else {
+                                  Navigator.of(context).pushNamedAndRemoveUntil(
+                                      '/home', (route) => false);
+                                }
                               })),
                         ),
                       )
@@ -218,5 +233,13 @@ class _QueState extends State<Que> {
         ),
       ),
     );
+  }
+
+  checkForChoice() {
+    if (_choice.text.toLowerCase() == "no") {
+      return false;
+    } else if (_choice.text.toLowerCase() == "yes") {
+      return true;
+    }
   }
 }
