@@ -170,7 +170,8 @@ class _SignUpState extends State<SignUp> {
           setState(() {
             _isLoading = false;
           });
-          Navigator.pushNamed(context, '/questions');
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/questions', (route) => false);
         }
       });
     }
