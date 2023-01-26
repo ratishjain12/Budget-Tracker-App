@@ -56,11 +56,22 @@ class _Login_optState extends State<Login_opt> {
                       onPressed: () {
                         Navigator.pushNamed(context, '/signin');
                       },
-                      child: Text(
-                        'E-mail',
-                        style: TextStyle(
-                          fontSize: 17,
-                        ),
+                      child: Row(
+                        children: [
+                          Icon(
+                            Icons.mail,
+                            color: Colors.white,
+                          ),
+                          SizedBox(
+                            width: 75,
+                          ),
+                          Text(
+                            'E-mail',
+                            style: TextStyle(
+                              fontSize: 17,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                     SizedBox(
@@ -73,9 +84,26 @@ class _Login_optState extends State<Login_opt> {
                       height: screenHeight * 0.03,
                     ),
                     CustomButton(
-                        child: Text(
-                          'Sign in with Google',
-                          style: TextStyle(fontSize: 17),
+                        child: Row(
+                          children: [
+                            new Tab(
+                              icon: new Image.asset('assets/images/google.jpg'),
+                              height: 24,
+                            ),
+                            // ImageIcon(
+                            //   AssetImage(
+                            //     'assets/images/google.jpg',
+                            //   ),
+                            //   size: 22,
+                            // ),
+                            SizedBox(
+                              width: 35,
+                            ),
+                            Text(
+                              'Sign in with google',
+                              style: TextStyle(fontSize: 17),
+                            )
+                          ],
                         ),
                         onPressed: (() {
                           print('Pressed');
@@ -89,6 +117,4 @@ class _Login_optState extends State<Login_opt> {
       ),
     );
   }
-
-  text(String s) {}
 }
