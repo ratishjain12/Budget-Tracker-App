@@ -1,4 +1,5 @@
 import 'package:budget_tracker/screens/helper/helper_function.dart';
+import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/screens/login_options/questions.dart';
 import 'package:budget_tracker/screens/registeration/sign_in.dart';
@@ -55,6 +56,7 @@ class _MyAppState extends State<MyApp> {
         '/signin': (context) => SignIn(),
         '/signup': (context) => SignUp(),
         '/questions': (context) => Que(),
+        '/home': (context) => HomePage(),
       },
     );
   }
