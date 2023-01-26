@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
@@ -145,12 +146,15 @@ class _SignInState extends State<SignIn> {
       });
       await authService
           .emailPasswordSignIn(_email.text, _password.text)
-          .then((value) {
+          .then((value) async {
         if (value == true) {
+          await helper_function.saveUserLoggedInStatus(true);
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/questions', (route) => false);
+        } else {
           setState(() {
             _isLoading = false;
           });
-          Navigator.pushNamed(context, '/questions');
         }
       });
     }
