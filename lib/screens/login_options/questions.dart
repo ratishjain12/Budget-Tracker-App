@@ -1,9 +1,13 @@
 import 'package:budget_tracker/screens/home_page.dart';
+import 'package:budget_tracker/screens/login_options/login_opt.dart';
+import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 const List<String> options = <String>[
   "Hard Savings",
@@ -28,6 +32,7 @@ class _QueState extends State<Que> {
 
   final _FormKey = GlobalKey<FormState>();
 
+  AuthService authservice = AuthService();
   @override
   void dispose() {
     // TODO: implement dispose

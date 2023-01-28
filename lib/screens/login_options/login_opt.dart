@@ -1,6 +1,10 @@
+import 'package:budget_tracker/screens/login_options/questions.dart';
+import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:budget_tracker/widgets/colors.dart';
+import 'package:google_sign_in/google_sign_in.dart';
 
 class Login_opt extends StatefulWidget {
   const Login_opt({Key? key}) : super(key: key);
@@ -10,6 +14,7 @@ class Login_opt extends StatefulWidget {
 }
 
 class _Login_optState extends State<Login_opt> {
+  AuthService authservice = AuthService();
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -84,30 +89,25 @@ class _Login_optState extends State<Login_opt> {
                       height: screenHeight * 0.03,
                     ),
                     CustomButton(
-                        child: Row(
-                          children: [
-                            new Tab(
-                              icon: new Image.asset('assets/images/google.jpg'),
-                              height: 24,
-                            ),
-                            // ImageIcon(
-                            //   AssetImage(
-                            //     'assets/images/google.jpg',
-                            //   ),
-                            //   size: 22,
-                            // ),
-                            SizedBox(
-                              width: 35,
-                            ),
-                            Text(
-                              'Sign in with google',
-                              style: TextStyle(fontSize: 17),
-                            )
-                          ],
-                        ),
-                        onPressed: (() {
-                          print('Pressed');
-                        }))
+                      child: Row(
+                        children: [
+                          new Tab(
+                            icon: new Image.asset('assets/images/google.jpg'),
+                            height: 24,
+                          ),
+                          SizedBox(
+                            width: 35,
+                          ),
+                          Text(
+                            'Sign in with google',
+                            style: TextStyle(fontSize: 17),
+                          )
+                        ],
+                      ),
+                      onPressed: (() => authservice.googleSignin().whenComplete(
+                          () => Navigator.of(context).pushReplacement(
+                              MaterialPageRoute(builder: (context) => Que())))),
+                    ),
                   ],
                 ),
               )
@@ -118,3 +118,20 @@ class _Login_optState extends State<Login_opt> {
     );
   }
 }
+
+// signInWithGoogle() async {
+//   GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
+
+//   GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
+
+//   AuthCredential credential = GoogleAuthProvider.credential(
+//     accessToken: googleAuth?.accessToken,
+//     idToken: googleAuth?.idToken,
+//   );
+//   try {
+//     UserCredential user =
+//         await FirebaseAuth.instance.signInWithCredential(credential);
+//   } catch (e) {
+//     print(e);
+//   }
+// }
