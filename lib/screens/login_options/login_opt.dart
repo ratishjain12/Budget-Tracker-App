@@ -1,3 +1,5 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
+import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/questions.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
@@ -104,9 +106,26 @@ class _Login_optState extends State<Login_opt> {
                           )
                         ],
                       ),
-                      onPressed: (() => authservice.googleSignin().whenComplete(
-                          () => Navigator.of(context).pushReplacement(
-                              MaterialPageRoute(builder: (context) => Que())))),
+                      onPressed: (() =>
+                          authservice.googleSignin().whenComplete(() async {
+                            await helper_function
+                                .getUserOnboaringInstance()
+                                .then((value) async {
+                              if (value == true) {
+                                await helper_function
+                                    .saveUserLoggedInStatus(true);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => HomePage()));
+                              } else {
+                                await helper_function
+                                    .saveUserLoggedInStatus(true);
+                                Navigator.of(context).pushReplacement(
+                                    MaterialPageRoute(
+                                        builder: (context) => Que()));
+                              }
+                            });
+                          })),
                     ),
                   ],
                 ),

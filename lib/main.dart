@@ -50,7 +50,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme:
             ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
       ),
-      home: _isSignedIn ? Que() : Login_opt(),
+      home: _isSignedIn ? HomePage() : Login_opt(),
       routes: {
         '/login_opt': (context) => Login_opt(),
         '/signin': (context) => SignIn(),

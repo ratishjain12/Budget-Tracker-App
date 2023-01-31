@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
@@ -152,7 +153,7 @@ class _QueState extends State<Que> {
                                 'Next',
                                 style: TextStyle(fontSize: 17),
                               ),
-                              onPressed: (() {
+                              onPressed: (() async {
                                 if (checkForChoice()) {
                                   FocusScope.of(context)
                                       .requestFocus(FocusNode());
@@ -160,6 +161,8 @@ class _QueState extends State<Que> {
                                       duration: Duration(seconds: 1),
                                       curve: Curves.easeInOut);
                                 } else {
+                                  await helper_function
+                                      .saveOnboardingStatus(true);
                                   Navigator.of(context).pushNamedAndRemoveUntil(
                                       '/home', (route) => false);
                                 }

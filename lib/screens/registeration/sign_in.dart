@@ -30,6 +30,11 @@ class _SignInState extends State<SignIn> {
           )
         : Scaffold(
             backgroundColor: AppColors.primaryColor,
+            appBar: AppBar(
+              elevation: 0.0,
+              iconTheme: IconThemeData(color: Colors.black),
+              backgroundColor: Colors.transparent,
+            ),
             body: SingleChildScrollView(
               child: SafeArea(
                 child: Form(
@@ -37,7 +42,7 @@ class _SignInState extends State<SignIn> {
                   child: Column(
                     children: [
                       SizedBox(
-                        height: screenHeight * 0.1,
+                        height: screenHeight * 0.051,
                       ),
                       Center(
                         child: Text(
