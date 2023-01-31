@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/services/database.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
@@ -34,6 +35,8 @@ class AuthService {
     }
   }
 
+  Future emailPasswordSignOut() async {}
+
   Future<bool> googleSignin() async {
     GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
     if (googleSignInAccount != null) {
@@ -58,5 +61,6 @@ class AuthService {
     User? user = await auth.currentUser;
     await googleSignIn.signOut();
     await auth.signOut();
+    await helper_function.saveUserLoggedInStatus(false);
   }
 }
