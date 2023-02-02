@@ -14,7 +14,19 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
+const List<String> options = <String>[
+  "Food & Drinks",
+  "Shopping",
+  "Housing",
+  "Life & Entertainment",
+  "Investments",
+  "Vehicle & Transportation",
+  "Other",
+];
+
 class _HomePageState extends State<HomePage> {
+  final _formKey = GlobalKey<FormState>();
+
   List<Map<String, dynamic>> expenseData = [
     {
       'title': "Shopping",
@@ -47,13 +59,20 @@ class _HomePageState extends State<HomePage> {
       'money': 50,
     },
   ];
+
+  String? opt;
   @override
   Widget build(BuildContext context) {
     var screeWidth = MediaQuery.of(context).size.width;
     var screeHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       floatingActionButton: FloatingActionButton(
-        onPressed: () {},
+        onPressed: () {
+          setState(() {
+            opt = null;
+          });
+          popupDialog(context);
+        },
         child: Icon(
           Icons.add,
           size: 40,
@@ -92,97 +111,179 @@ class _HomePageState extends State<HomePage> {
             ),
           ]),
       backgroundColor: AppColors.primaryColor,
-      body: SafeArea(
-        child: Column(
-          children: [
-            Padding(
-              padding:
-                  const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
-              child: Container(
-                width: double.infinity,
-                height: screeHeight * 0.22,
-                decoration: BoxDecoration(
-                  color: Colors.white,
-                  borderRadius: BorderRadius.circular(30),
-                  boxShadow: [
-                    BoxShadow(
-                      blurRadius: 10.0,
-                      spreadRadius: 1,
-                      color: Colors.grey,
-                    )
-                  ],
-                ),
+      body: SingleChildScrollView(
+        child: SafeArea(
+          child: Column(
+            children: [
+              Padding(
+                padding:
+                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
                 child: Container(
-                  margin: EdgeInsets.all(18),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        "Expenses",
-                        style: TextStyle(
-                          fontSize: 24,
-                        ),
-                      ),
-                      Text(
-                        "100000" + " " + "\u{20B9}",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
-                      Padding(padding: EdgeInsets.all(7)),
-                      Text(
-                        "Savings",
-                        style: TextStyle(
-                          fontSize: 24,
-                        ),
-                      ),
-                      Text(
-                        "300000" + " " + "\u{20B9}",
-                        style: TextStyle(
-                          fontSize: 18,
-                        ),
-                      ),
+                  width: double.infinity,
+                  height: screeHeight * 0.22,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(30),
+                    boxShadow: [
+                      BoxShadow(
+                        blurRadius: 10.0,
+                        spreadRadius: 1,
+                        color: Colors.grey,
+                      )
                     ],
                   ),
+                  child: Container(
+                    margin: EdgeInsets.all(18),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Expenses",
+                          style: TextStyle(
+                            fontSize: 24,
+                          ),
+                        ),
+                        Text(
+                          "100000" + " " + "\u{20B9}",
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        Padding(padding: EdgeInsets.all(7)),
+                        Text(
+                          "Savings",
+                          style: TextStyle(
+                            fontSize: 24,
+                          ),
+                        ),
+                        Text(
+                          "300000" + " " + "\u{20B9}",
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
                 ),
               ),
-            ),
-            SizedBox(
-              height: screeHeight * 0.06,
-            ),
-            Text(
-              "Recent Expenses",
-              style: TextStyle(
-                fontSize: 24,
+              SizedBox(
+                height: screeHeight * 0.06,
               ),
-            ),
-            SizedBox(
-              height: screeHeight * 0.03,
-            ),
-            ListView.builder(
-              shrinkWrap: true,
-              itemCount: 5,
-              itemBuilder: ((context, index) {
-                return Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                  child: ExpenseTile(
-                    title: expenseData[index]['title'],
-                    money: expenseData[index]['money'],
-                    date: expenseData[index]['date'],
-                  ),
-                );
-              }),
-            ),
+              Text(
+                "Recent Expenses",
+                style: TextStyle(
+                  fontSize: 24,
+                ),
+              ),
+              SizedBox(
+                height: screeHeight * 0.03,
+              ),
+              ListView.builder(
+                shrinkWrap: true,
+                itemCount: 5,
+                itemBuilder: ((context, index) {
+                  return Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    child: ExpenseTile(
+                      title: expenseData[index]['title'],
+                      money: expenseData[index]['money'],
+                      date: expenseData[index]['date'],
+                    ),
+                  );
+                }),
+              ),
 
-            // CustomButton(
-            //     child: Text("Sign out"),
-            //     onPressed: () {
-            //       signOut(context);
-            //     }),
-          ],
+              // CustomButton(
+              //     child: Text("Sign out"),
+              //     onPressed: () {
+              //       signOut(context);
+              //     }),
+            ],
+          ),
         ),
       ),
     );
+  }
+
+  popupDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return Center(
+              child: AlertDialog(
+                title: Text(
+                  "Add Expense",
+                  textAlign: TextAlign.center,
+                ),
+                content: Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Form(
+                    key: _formKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          keyboardType: TextInputType.number,
+                          decoration: InputDecoration(
+                            isDense: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: AppColors.secondaryColor),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: AppColors.secondaryColor),
+                            ),
+                            hintText: 'Expense...',
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        DropdownButton<String>(
+                          isExpanded: true,
+                          hint: Text("Select category"),
+                          disabledHint: Text("Select category"),
+                          value: opt,
+                          icon: const Icon(Icons.arrow_downward),
+                          elevation: 4,
+                          style: const TextStyle(color: Colors.black),
+                          underline: Container(
+                            height: 1,
+                            color: AppColors.secondaryColor,
+                          ),
+                          onChanged: (String? value) {
+                            // This is called when the user selects an item.
+                            setState(() {
+                              opt = value ?? "";
+                            });
+                          },
+                          items: options
+                              .map<DropdownMenuItem<String>>((String value) {
+                            return DropdownMenuItem<String>(
+                              value: value,
+                              child: Text(value),
+                            );
+                          }).toList(),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.02,
+                        ),
+                        CustomButton(
+                            child: Text("Submit"),
+                            onPressed: () {
+                              Navigator.of(context).pop(opt = null);
+                            }),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }));
+        });
   }
 }
 
