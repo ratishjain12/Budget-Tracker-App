@@ -23,7 +23,6 @@ class ExpenseTile extends StatefulWidget {
 class _ExpenseTileState extends State<ExpenseTile> {
   @override
   Widget build(BuildContext context) {
-    print(widget.date);
     return Container(
       margin: EdgeInsets.all(8),
       padding: EdgeInsets.all(8),
