@@ -274,7 +274,7 @@ class _HomePageState extends State<HomePage> {
                         CustomButton(
                             child: Text("Submit"),
                             onPressed: () {
-                              Navigator.of(context).pop(opt = null);
+                              Navigator.of(context).pop();
                             }),
                       ],
                     ),
