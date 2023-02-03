@@ -1,5 +1,6 @@
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
+import 'package:budget_tracker/widgets/charts.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
@@ -199,6 +200,10 @@ class _HomePageState extends State<HomePage> {
               //     onPressed: () {
               //       signOut(context);
               //     }),
+              // Container(
+              //   width: 50,
+              //   child: ChartWidget(),
+              // ),
             ],
           ),
         ),
