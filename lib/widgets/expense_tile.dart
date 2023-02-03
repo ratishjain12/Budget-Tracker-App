@@ -24,7 +24,7 @@ class _ExpenseTileState extends State<ExpenseTile> {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(5),
       padding: EdgeInsets.all(8),
       width: double.infinity,
       height: 60,

@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/chart.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/colors.dart';
@@ -63,22 +64,26 @@ class _HomePageState extends State<HomePage> {
   String? opt;
   @override
   Widget build(BuildContext context) {
-    var screeWidth = MediaQuery.of(context).size.width;
-    var screeHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            opt = null;
-          });
-          popupDialog(context);
-        },
-        child: Icon(
-          Icons.add,
-          size: 40,
-          color: Colors.white,
+      floatingActionButton: Container(
+        width: 50,
+        height: 50,
+        child: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              opt = null;
+            });
+            popupDialog(context);
+          },
+          child: Icon(
+            Icons.add,
+            size: 40,
+            color: Colors.white,
+          ),
+          backgroundColor: AppColors.secondaryColor,
         ),
-        backgroundColor: AppColors.secondaryColor,
       ),
       bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Colors.grey,
@@ -120,7 +125,7 @@ class _HomePageState extends State<HomePage> {
                     const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
                 child: Container(
                   width: double.infinity,
-                  height: screeHeight * 0.22,
+                  height: screenHeight * 0.25,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
@@ -134,41 +139,53 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Container(
                     margin: EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Expenses",
-                          style: TextStyle(
-                            fontSize: 24,
-                          ),
-                        ),
-                        Text(
-                          "100000" + " " + "\u{20B9}",
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.all(7)),
-                        Text(
-                          "Savings",
-                          style: TextStyle(
-                            fontSize: 24,
-                          ),
-                        ),
-                        Text(
-                          "300000" + " " + "\u{20B9}",
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     Text(
+                        //       "Expenses",
+                        //       style: TextStyle(
+                        //         fontSize: 24,
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       "100000" + " " + "\u{20B9}",
+                        //       style: TextStyle(
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //     Padding(padding: EdgeInsets.all(7)),
+                        //     Text(
+                        //       "Savings",
+                        //       style: TextStyle(
+                        //         fontSize: 24,
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       "300000" + " " + "\u{20B9}",
+                        //       style: TextStyle(
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        ChartWidget(
+                          isLegend: true,
+                          expenses: 20000,
+                          savings: 30000,
+                          chartColor: [Colors.blue, Colors.yellow],
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
+
               SizedBox(
-                height: screeHeight * 0.06,
+                height: screenHeight * 0.01,
               ),
               Text(
                 "Recent Expenses",
@@ -177,7 +194,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                height: screeHeight * 0.03,
+                height: screenHeight * 0.01,
               ),
               ListView.builder(
                 shrinkWrap: true,
