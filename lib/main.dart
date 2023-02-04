@@ -1,4 +1,4 @@
-import 'package:budget_tracker/screens/chart.dart';
+import 'package:budget_tracker/widgets/chart.dart';
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
@@ -51,7 +51,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme:
             ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
       ),
-      home: HomePage(), //_isSignedIn ? HomePage() : Login_opt(),
+      home: _isSignedIn ? HomePage() : Login_opt(),
       routes: {
         // '/graph': (context) => ChartWidget(),
         '/login_opt': (context) => Login_opt(),

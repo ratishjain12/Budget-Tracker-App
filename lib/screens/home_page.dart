@@ -1,12 +1,16 @@
-import 'package:budget_tracker/screens/chart.dart';
+import 'package:budget_tracker/services/database.dart';
+import 'package:budget_tracker/widgets/chart.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,6 +31,7 @@ const List<String> options = <String>[
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
+  final _expenseController = TextEditingController();
 
   List<Map<String, dynamic>> expenseData = [
     {
@@ -60,6 +65,12 @@ class _HomePageState extends State<HomePage> {
       'money': 50,
     },
   ];
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _expenseController.dispose();
+    super.dispose();
+  }
 
   String? opt;
   @override
@@ -211,11 +222,16 @@ class _HomePageState extends State<HomePage> {
                 }),
               ),
 
-              // CustomButton(
-              //     child: Text("Sign out"),
-              //     onPressed: () {
-              //       signOut(context);
-              //     }),
+              CustomButton(
+                  child: Text("Sign out"),
+                  onPressed: () {
+                    signOut(context);
+                  }),
+
+              // Container(
+              //   width: 50,
+              //   child: ChartWidget(),
+              // ),
             ],
           ),
         ),
@@ -242,7 +258,14 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
+                          controller: _expenseController,
                           keyboardType: TextInputType.number,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "Please enter expense";
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             isDense: true,
                             enabledBorder: UnderlineInputBorder(
@@ -291,7 +314,22 @@ class _HomePageState extends State<HomePage> {
                         CustomButton(
                             child: Text("Submit"),
                             onPressed: () {
-                              Navigator.of(context).pop(opt = null);
+                              if (_formKey.currentState!.validate()) {
+                                if (opt == null) {
+                                  Fluttertoast.showToast(
+                                      msg: "Please select a category",
+                                      textColor: Colors.red,
+                                      backgroundColor: Colors.red,
+                                      fontSize: 20);
+                                  return;
+                                }
+
+                                addExpense(
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    int.parse(_expenseController.text),
+                                    opt!);
+                                Navigator.of(context).pop();
+                              }
                             }),
                       ],
                     ),
@@ -302,6 +340,22 @@ class _HomePageState extends State<HomePage> {
           }));
         });
   }
+}
+
+addExpense(String userid, int expense, String category) async {
+  await Database(uid: FirebaseAuth.instance.currentUser!.uid)
+      .addExpense(userid, expense, category)
+      .then((value) {
+    if (value) {
+      Fluttertoast.showToast(
+        msg: "Expense added",
+        backgroundColor: Colors.green,
+      );
+    } else {
+      Fluttertoast.showToast(
+          msg: "Failed to add expense", backgroundColor: Colors.red);
+    }
+  });
 }
 
 signOut(BuildContext context) async {

@@ -4,6 +4,7 @@ import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../services/auth_service.dart';
 
@@ -24,18 +25,20 @@ class _SignInState extends State<SignIn> {
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
-    return _isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : Scaffold(
-            backgroundColor: AppColors.primaryColor,
-            appBar: AppBar(
-              elevation: 0.0,
-              iconTheme: IconThemeData(color: Colors.black),
-              backgroundColor: Colors.transparent,
-            ),
-            body: SingleChildScrollView(
+    return Scaffold(
+      backgroundColor: AppColors.primaryColor,
+      appBar: AppBar(
+        elevation: 0.0,
+        iconTheme: IconThemeData(color: Colors.black),
+        backgroundColor: Colors.transparent,
+      ),
+      body: _isLoading
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : SingleChildScrollView(
               child: SafeArea(
                 child: Form(
                   key: _formKey,
@@ -141,7 +144,7 @@ class _SignInState extends State<SignIn> {
                 ),
               ),
             ),
-          );
+    );
   }
 
   login() async {
@@ -157,6 +160,8 @@ class _SignInState extends State<SignIn> {
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         } else {
+          Fluttertoast.showToast(
+              msg: "Invalid email or password", backgroundColor: Colors.red);
           setState(() {
             _isLoading = false;
           });

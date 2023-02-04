@@ -13,4 +13,12 @@ class Database {
       "email": email,
     });
   }
+
+  Future addExpense(String userid, int expense, String category) async {
+    return await userCollection.doc(userid).collection('expense').add({
+      'amount': expense,
+      'category': category,
+      'Date': Timestamp.now(),
+    });
+  }
 }

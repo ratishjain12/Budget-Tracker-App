@@ -106,26 +106,27 @@ class _Login_optState extends State<Login_opt> {
                           )
                         ],
                       ),
-                      onPressed: (() =>
-                          authservice.googleSignin().whenComplete(() async {
-                            await helper_function
-                                .getUserOnboaringInstance()
-                                .then((value) async {
-                              if (value == true) {
-                                await helper_function
-                                    .saveUserLoggedInStatus(true);
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => HomePage()));
-                              } else {
-                                await helper_function
-                                    .saveUserLoggedInStatus(true);
-                                Navigator.of(context).pushReplacement(
-                                    MaterialPageRoute(
-                                        builder: (context) => Que()));
-                              }
-                            });
-                          })),
+                      onPressed: (() {
+                        authservice.googleSignin().whenComplete(() async {
+                          await helper_function
+                              .getUserOnboaringInstance()
+                              .then((value) async {
+                            if (value == true) {
+                              await helper_function
+                                  .saveUserLoggedInStatus(true);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => HomePage()));
+                            } else {
+                              await helper_function
+                                  .saveUserLoggedInStatus(true);
+                              Navigator.of(context).pushReplacement(
+                                  MaterialPageRoute(
+                                      builder: (context) => Que()));
+                            }
+                          });
+                        });
+                      }),
                     ),
                   ],
                 ),
