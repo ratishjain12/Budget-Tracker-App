@@ -1,5 +1,6 @@
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/services/database.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
@@ -35,8 +36,6 @@ class AuthService {
     }
   }
 
-  Future emailPasswordSignOut() async {}
-
   Future<bool> googleSignin() async {
     GoogleSignInAccount? googleSignInAccount = await googleSignIn.signIn();
     if (googleSignInAccount != null) {
@@ -49,7 +48,14 @@ class AuthService {
 
       try {
         UserCredential result = await auth.signInWithCredential(credential);
-      } catch (e) {
+        User? user = result.user;
+        if (user != null) {
+          if (result.additionalUserInfo!.isNewUser == true) {
+            await Database(uid: user.uid)
+                .updateUser(user.email ?? "", user.displayName ?? "");
+          }
+        }
+      } on FirebaseAuthException catch (e) {
         print(e);
       }
       return Future.value(true);
@@ -58,9 +64,12 @@ class AuthService {
   }
 
   Future signOut() async {
-    User? user = await auth.currentUser;
-    await googleSignIn.signOut();
-    await auth.signOut();
+    try {
+      await googleSignIn.signOut();
+      await auth.signOut();
+    } catch (e) {
+      print(e);
+    }
     await helper_function.saveUserLoggedInStatus(false);
   }
 }

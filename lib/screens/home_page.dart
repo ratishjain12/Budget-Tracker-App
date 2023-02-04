@@ -1,12 +1,16 @@
+import 'package:budget_tracker/services/database.dart';
+import 'package:budget_tracker/widgets/chart.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
-import 'package:budget_tracker/widgets/charts.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -27,6 +31,7 @@ const List<String> options = <String>[
 
 class _HomePageState extends State<HomePage> {
   final _formKey = GlobalKey<FormState>();
+  final _expenseController = TextEditingController();
 
   List<Map<String, dynamic>> expenseData = [
     {
@@ -60,26 +65,36 @@ class _HomePageState extends State<HomePage> {
       'money': 50,
     },
   ];
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _expenseController.dispose();
+    super.dispose();
+  }
 
   String? opt;
   @override
   Widget build(BuildContext context) {
-    var screeWidth = MediaQuery.of(context).size.width;
-    var screeHeight = MediaQuery.of(context).size.height;
+    var screenWidth = MediaQuery.of(context).size.width;
+    var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {
-          setState(() {
-            opt = null;
-          });
-          popupDialog(context);
-        },
-        child: Icon(
-          Icons.add,
-          size: 40,
-          color: Colors.white,
+      floatingActionButton: Container(
+        width: 50,
+        height: 50,
+        child: FloatingActionButton(
+          onPressed: () {
+            setState(() {
+              opt = null;
+            });
+            popupDialog(context);
+          },
+          child: Icon(
+            Icons.add,
+            size: 40,
+            color: Colors.white,
+          ),
+          backgroundColor: AppColors.secondaryColor,
         ),
-        backgroundColor: AppColors.secondaryColor,
       ),
       bottomNavigationBar: BottomNavigationBar(
           unselectedItemColor: Colors.grey,
@@ -121,7 +136,7 @@ class _HomePageState extends State<HomePage> {
                     const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
                 child: Container(
                   width: double.infinity,
-                  height: screeHeight * 0.22,
+                  height: screenHeight * 0.25,
                   decoration: BoxDecoration(
                     color: Colors.white,
                     borderRadius: BorderRadius.circular(30),
@@ -135,41 +150,53 @@ class _HomePageState extends State<HomePage> {
                   ),
                   child: Container(
                     margin: EdgeInsets.all(18),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Text(
-                          "Expenses",
-                          style: TextStyle(
-                            fontSize: 24,
-                          ),
-                        ),
-                        Text(
-                          "100000" + " " + "\u{20B9}",
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
-                        ),
-                        Padding(padding: EdgeInsets.all(7)),
-                        Text(
-                          "Savings",
-                          style: TextStyle(
-                            fontSize: 24,
-                          ),
-                        ),
-                        Text(
-                          "300000" + " " + "\u{20B9}",
-                          style: TextStyle(
-                            fontSize: 18,
-                          ),
+                        // Column(
+                        //   crossAxisAlignment: CrossAxisAlignment.start,
+                        //   children: [
+                        //     Text(
+                        //       "Expenses",
+                        //       style: TextStyle(
+                        //         fontSize: 24,
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       "100000" + " " + "\u{20B9}",
+                        //       style: TextStyle(
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //     Padding(padding: EdgeInsets.all(7)),
+                        //     Text(
+                        //       "Savings",
+                        //       style: TextStyle(
+                        //         fontSize: 24,
+                        //       ),
+                        //     ),
+                        //     Text(
+                        //       "300000" + " " + "\u{20B9}",
+                        //       style: TextStyle(
+                        //         fontSize: 18,
+                        //       ),
+                        //     ),
+                        //   ],
+                        // ),
+                        ChartWidget(
+                          isLegend: true,
+                          expenses: 20000,
+                          savings: 30000,
+                          chartColor: [Colors.blue, Colors.yellow],
                         ),
                       ],
                     ),
                   ),
                 ),
               ),
+
               SizedBox(
-                height: screeHeight * 0.06,
+                height: screenHeight * 0.01,
               ),
               Text(
                 "Recent Expenses",
@@ -178,7 +205,7 @@ class _HomePageState extends State<HomePage> {
                 ),
               ),
               SizedBox(
-                height: screeHeight * 0.03,
+                height: screenHeight * 0.01,
               ),
               ListView.builder(
                 shrinkWrap: true,
@@ -195,11 +222,12 @@ class _HomePageState extends State<HomePage> {
                 }),
               ),
 
-              // CustomButton(
-              //     child: Text("Sign out"),
-              //     onPressed: () {
-              //       signOut(context);
-              //     }),
+              CustomButton(
+                  child: Text("Sign out"),
+                  onPressed: () {
+                    signOut(context);
+                  }),
+
               // Container(
               //   width: 50,
               //   child: ChartWidget(),
@@ -230,7 +258,14 @@ class _HomePageState extends State<HomePage> {
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
+                          controller: _expenseController,
                           keyboardType: TextInputType.number,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "Please enter expense";
+                            }
+                            return null;
+                          },
                           decoration: InputDecoration(
                             isDense: true,
                             enabledBorder: UnderlineInputBorder(
@@ -279,7 +314,22 @@ class _HomePageState extends State<HomePage> {
                         CustomButton(
                             child: Text("Submit"),
                             onPressed: () {
-                              Navigator.of(context).pop();
+                              if (_formKey.currentState!.validate()) {
+                                if (opt == null) {
+                                  Fluttertoast.showToast(
+                                      msg: "Please select a category",
+                                      textColor: Colors.red,
+                                      backgroundColor: Colors.red,
+                                      fontSize: 20);
+                                  return;
+                                }
+
+                                addExpense(
+                                    FirebaseAuth.instance.currentUser!.uid,
+                                    int.parse(_expenseController.text),
+                                    opt!);
+                                Navigator.of(context).pop();
+                              }
                             }),
                       ],
                     ),
@@ -290,6 +340,22 @@ class _HomePageState extends State<HomePage> {
           }));
         });
   }
+}
+
+addExpense(String userid, int expense, String category) async {
+  await Database(uid: FirebaseAuth.instance.currentUser!.uid)
+      .addExpense(userid, expense, category)
+      .then((value) {
+    if (value) {
+      Fluttertoast.showToast(
+        msg: "Expense added",
+        backgroundColor: Colors.green,
+      );
+    } else {
+      Fluttertoast.showToast(
+          msg: "Failed to add expense", backgroundColor: Colors.red);
+    }
+  });
 }
 
 signOut(BuildContext context) async {

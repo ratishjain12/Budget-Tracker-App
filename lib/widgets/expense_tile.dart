@@ -23,8 +23,9 @@ class ExpenseTile extends StatefulWidget {
 class _ExpenseTileState extends State<ExpenseTile> {
   @override
   Widget build(BuildContext context) {
+    var screenHeight = MediaQuery.of(context).size.height;
     return Container(
-      margin: EdgeInsets.all(8),
+      margin: EdgeInsets.all(screenHeight * 0.012),
       padding: EdgeInsets.all(8),
       width: double.infinity,
       height: 60,

@@ -2,6 +2,7 @@ import 'package:budget_tracker/services/auth_service.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../widgets/colors.dart';
 import '../../widgets/custom_button.dart';
@@ -24,18 +25,20 @@ class _SignUpState extends State<SignUp> {
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
-    return _isLoading
-        ? Center(
-            child: CircularProgressIndicator(),
-          )
-        : Scaffold(
-            appBar: AppBar(
-              backgroundColor: Colors.transparent,
-              iconTheme: IconThemeData(color: Colors.black),
-              elevation: 0.0,
-            ),
-            backgroundColor: AppColors.primaryColor,
-            body: SingleChildScrollView(
+    return Scaffold(
+      appBar: AppBar(
+        backgroundColor: Colors.transparent,
+        iconTheme: IconThemeData(color: Colors.black),
+        elevation: 0.0,
+      ),
+      backgroundColor: AppColors.primaryColor,
+      body: _isLoading
+          ? Container(
+              child: Center(
+                child: CircularProgressIndicator(),
+              ),
+            )
+          : SingleChildScrollView(
               child: SafeArea(
                 child: Form(
                   key: _formKey,
@@ -138,7 +141,7 @@ class _SignUpState extends State<SignUp> {
                             ),
                             CustomButton(
                               onPressed: () {
-                                register();
+                                register(context);
                               },
                               child: Text(
                                 "Sign up",
@@ -155,10 +158,10 @@ class _SignUpState extends State<SignUp> {
                 ),
               ),
             ),
-          );
+    );
   }
 
-  register() async {
+  register(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
@@ -167,11 +170,15 @@ class _SignUpState extends State<SignUp> {
           .emailPasswordSignUp(_email.text, _password.text, _username.text)
           .then((value) async {
         if (value == true) {
+          Navigator.of(context)
+              .pushNamedAndRemoveUntil('/questions', (route) => false);
+        } else {
+          Fluttertoast.showToast(
+              msg: "User with email  already exists.",
+              backgroundColor: Colors.red);
           setState(() {
             _isLoading = false;
           });
-          Navigator.of(context)
-              .pushNamedAndRemoveUntil('/questions', (route) => false);
         }
       });
     }

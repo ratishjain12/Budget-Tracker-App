@@ -14,7 +14,15 @@
       },
       "oauth_client": [
         {
-          "client_id": "658127138351-iqc2g3k799r4qjbosnk81blia5ub3ajg.apps.googleusercontent.com",
+          "client_id": "658127138351-h2m7laaepgo6im3lo6gmc6nv4lhkpf03.apps.googleusercontent.com",
+          "client_type": 1,
+          "android_info": {
+            "package_name": "com.example.budget_tracker",
+            "certificate_hash": "97f8936fd80d31917627aa9f46331d4ed87197c8"
+          }
+        },
+        {
+          "client_id": "658127138351-qkhfpp7gtp7pl91s35ralv9u570uf47a.apps.googleusercontent.com",
           "client_type": 1,
           "android_info": {
             "package_name": "com.example.budget_tracker",
@@ -22,7 +30,7 @@
           }
         },
         {
-          "client_id": "658127138351-ihdulvq00ai1tt6dsn6c8its30mkhk3h.apps.googleusercontent.com",
+          "client_id": "658127138351-plt2kuo4f9en0vhvhgo8vphh9mc0joii.apps.googleusercontent.com",
           "client_type": 3
         }
       ],
