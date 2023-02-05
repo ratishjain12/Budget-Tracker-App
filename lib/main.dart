@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/registeration/forgot_pwd.dart';
 import 'package:budget_tracker/widgets/chart.dart';
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/screens/home_page.dart';
@@ -59,6 +60,7 @@ class _MyAppState extends State<MyApp> {
         '/signup': (context) => SignUp(),
         '/questions': (context) => Que(),
         '/home': (context) => HomePage(),
+        '/forget_pwd': (context) => ForgotPwdPage(),
       },
     );
   }
