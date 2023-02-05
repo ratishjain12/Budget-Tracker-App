@@ -117,14 +117,17 @@ class _SignInState extends State<SignIn> {
                                 hintText: "Enter Password",
                               ),
                             ),
-                            SizedBox(
-                              height: screenHeight * 0.025,
-                            ),
-                            TextButton(
-                              child: Text('Forget password?'),
-                              onPressed: () {
-                                Navigator.pushNamed(context, '/forget_pwd');
-                              },
+                            Container(
+                              padding: EdgeInsets.only(bottom: 2),
+                              alignment: Alignment.topRight,
+                              child: TextButton(
+                                child: Text('Forget password?'),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/forget_pwd')
+                                      .whenComplete(() => Navigator.pushNamed(
+                                          context, '/signin'));
+                                },
+                              ),
                             ),
                             CustomButton(
                               onPressed: () {
