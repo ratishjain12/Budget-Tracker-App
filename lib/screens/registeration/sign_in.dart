@@ -7,6 +7,7 @@ import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../services/auth_service.dart';
+import 'forgot_pwd.dart';
 
 class SignIn extends StatefulWidget {
   const SignIn({Key? key}) : super(key: key);
@@ -69,7 +70,7 @@ class _SignInState extends State<SignIn> {
                         ),
                       ),
                       SizedBox(
-                        height: screenHeight * 0.1,
+                        height: screenHeight * 0.07,
                       ),
                       Container(
                         width: screenWidth * 0.75,
@@ -116,8 +117,17 @@ class _SignInState extends State<SignIn> {
                                 hintText: "Enter Password",
                               ),
                             ),
-                            SizedBox(
-                              height: screenHeight * 0.05,
+                            Container(
+                              padding: EdgeInsets.only(bottom: 2),
+                              alignment: Alignment.topRight,
+                              child: TextButton(
+                                child: Text('Forget password?'),
+                                onPressed: () {
+                                  Navigator.pushNamed(context, '/forget_pwd')
+                                      .whenComplete(() => Navigator.pushNamed(
+                                          context, '/signin'));
+                                },
+                              ),
                             ),
                             CustomButton(
                               onPressed: () {
