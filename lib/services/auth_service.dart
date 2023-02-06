@@ -2,14 +2,15 @@ import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/services/database.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/material.dart';
 import 'package:google_sign_in/google_sign_in.dart';
 
 class AuthService {
   FirebaseAuth auth = FirebaseAuth.instance;
   final googleSignIn = GoogleSignIn();
 
-  Future emailPasswordSignUp(
-      String email, String password, String username) async {
+  Future emailPasswordSignUp(String email, String password, String username,
+      BuildContext context) async {
     try {
       User user = (await auth.createUserWithEmailAndPassword(
               email: email, password: password))
@@ -19,11 +20,18 @@ class AuthService {
         return true;
       }
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.message!,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 
-  Future emailPasswordSignIn(String email, String password) async {
+  Future emailPasswordSignIn(
+      String email, String password, BuildContext context) async {
     try {
       User user = (await auth.signInWithEmailAndPassword(
               email: email, password: password))
@@ -32,7 +40,13 @@ class AuthService {
         return true;
       }
     } on FirebaseAuthException catch (e) {
-      return e.message;
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(
+          e.message!,
+          style: TextStyle(color: Colors.white),
+        ),
+        backgroundColor: Colors.red,
+      ));
     }
   }
 
@@ -50,9 +64,14 @@ class AuthService {
         UserCredential result = await auth.signInWithCredential(credential);
         User? user = result.user;
         if (user != null) {
-          if (result.additionalUserInfo!.isNewUser == true) {
-            await Database(uid: user.uid)
-                .updateUser(user.email ?? "", user.displayName ?? "");
+          if (result.additionalUserInfo!.isNewUser) {
+            await FirebaseFirestore.instance
+                .collection("users")
+                .doc(user.uid)
+                .set({
+              "username": user.displayName,
+              "email": user.email,
+            });
           }
         }
       } on FirebaseAuthException catch (e) {

@@ -84,6 +84,12 @@ class _SignUpState extends State<SignUp> {
                               height: screenHeight * 0.05,
                             ),
                             TextFormField(
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "username cannot be empty";
+                                }
+                                return null;
+                              },
                               controller: _username,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -100,6 +106,12 @@ class _SignUpState extends State<SignUp> {
                               height: screenHeight * 0.03,
                             ),
                             TextFormField(
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "email cannot be empty";
+                                }
+                                return null;
+                              },
                               controller: _email,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -130,10 +142,9 @@ class _SignUpState extends State<SignUp> {
                               ),
                               validator: (val) {
                                 if (val!.length < 8) {
-                                  return "Password must be at least 6 characters";
-                                } else {
-                                  return null;
+                                  return "Password must be at least 8 characters long";
                                 }
+                                return null;
                               },
                             ),
                             SizedBox(
@@ -167,15 +178,13 @@ class _SignUpState extends State<SignUp> {
         _isLoading = true;
       });
       await authService
-          .emailPasswordSignUp(_email.text, _password.text, _username.text)
+          .emailPasswordSignUp(
+              _email.text, _password.text, _username.text, context)
           .then((value) async {
         if (value == true) {
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/questions', (route) => false);
         } else {
-          Fluttertoast.showToast(
-              msg: "User with email  already exists.",
-              backgroundColor: Colors.red);
           setState(() {
             _isLoading = false;
           });

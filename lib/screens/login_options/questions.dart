@@ -1,7 +1,10 @@
+import 'dart:ffi';
+
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
+import 'package:budget_tracker/services/database.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
@@ -26,10 +29,10 @@ class Que extends StatefulWidget {
 class _QueState extends State<Que> {
   String dropdownValue = options.first;
   final _pageController = PageController(initialPage: 0);
-
+  final _formKey = GlobalKey<FormState>();
   TextEditingController _incomeText = TextEditingController();
   TextEditingController _choice = TextEditingController();
-  TextEditingController _ = TextEditingController();
+  TextEditingController _amountSave = TextEditingController();
 
   final _FormKey = GlobalKey<FormState>();
 
@@ -78,6 +81,7 @@ class _QueState extends State<Que> {
                       SizedBox(
                         width: 300,
                         child: TextFormField(
+                          keyboardType: TextInputType.number,
                           controller: _incomeText,
                           decoration: InputDecoration(
                             border: OutlineInputBorder(
@@ -150,7 +154,7 @@ class _QueState extends State<Que> {
                           child: CustomButton(
                               width: 300,
                               child: Text(
-                                'Next',
+                                'Submit',
                                 style: TextStyle(fontSize: 17),
                               ),
                               onPressed: (() async {
@@ -161,10 +165,24 @@ class _QueState extends State<Que> {
                                       duration: Duration(seconds: 1),
                                       curve: Curves.easeInOut);
                                 } else {
-                                  await helper_function
-                                      .saveOnboardingStatus(true);
-                                  Navigator.of(context).pushNamedAndRemoveUntil(
-                                      '/home', (route) => false);
+                                  await Database(
+                                          uid: FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                      .userDetail(
+                                          int.parse(_incomeText.text), "null")
+                                      .then((value) async {
+                                    if (value == null) {
+                                      await helper_function
+                                          .saveOnboardingStatus(true);
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/home');
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Some issue has occured ")));
+                                    }
+                                  });
                                 }
                               })),
                         ),
@@ -231,7 +249,129 @@ class _QueState extends State<Que> {
                                 'Done',
                                 style: TextStyle(fontSize: 17),
                               ),
-                              onPressed: (() {})),
+                              onPressed: (() async {
+                                if (dropdownValue == "Custom Savings") {
+                                  showDialog(
+                                      context: context,
+                                      builder: (context) {
+                                        return AlertDialog(
+                                          title: Text(
+                                              "Enter the amount you want to save"),
+                                          content: Container(
+                                            width: MediaQuery.of(context)
+                                                    .size
+                                                    .width *
+                                                0.7,
+                                            child: Form(
+                                              key: _formKey,
+                                              child: Column(
+                                                mainAxisSize: MainAxisSize.min,
+                                                children: [
+                                                  TextFormField(
+                                                    controller: _amountSave,
+                                                    keyboardType:
+                                                        TextInputType.number,
+                                                    validator: (val) {
+                                                      if (val == null ||
+                                                          val.isEmpty) {
+                                                        return "Please enter the amount";
+                                                      }
+                                                      return null;
+                                                    },
+                                                    decoration: InputDecoration(
+                                                      isDense: true,
+                                                      enabledBorder:
+                                                          UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: AppColors
+                                                                .secondaryColor),
+                                                      ),
+                                                      border:
+                                                          UnderlineInputBorder(
+                                                        borderSide: BorderSide(
+                                                            color: AppColors
+                                                                .secondaryColor),
+                                                      ),
+                                                      hintText: 'Amount...',
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    height:
+                                                        MediaQuery.of(context)
+                                                                .size
+                                                                .height *
+                                                            0.02,
+                                                  ),
+                                                  CustomButton(
+                                                      child: Text("Submit"),
+                                                      onPressed: () async {
+                                                        if (_formKey
+                                                            .currentState!
+                                                            .validate()) {
+                                                          await Database(
+                                                                  uid: FirebaseAuth
+                                                                      .instance
+                                                                      .currentUser!
+                                                                      .uid)
+                                                              .userDetailCustomSaving(
+                                                                  int.parse(
+                                                                      _incomeText
+                                                                          .text),
+                                                                  dropdownValue,
+                                                                  int.parse(
+                                                                      _amountSave
+                                                                          .text))
+                                                              .then(
+                                                                  (value) async {
+                                                            if (value == null) {
+                                                              await helper_function
+                                                                  .saveOnboardingStatus(
+                                                                      true);
+                                                              Navigator.of(
+                                                                      context)
+                                                                  .pushReplacementNamed(
+                                                                      '/home');
+                                                            } else {
+                                                              ScaffoldMessenger
+                                                                      .of(
+                                                                          context)
+                                                                  .showSnackBar(
+                                                                      SnackBar(
+                                                                          content:
+                                                                              Text("Some issue has occured ")));
+                                                            }
+                                                          });
+                                                        }
+                                                      }),
+                                                ],
+                                              ),
+                                            ),
+                                          ),
+                                        );
+                                      });
+                                } else {
+                                  await Database(
+                                          uid: FirebaseAuth
+                                              .instance.currentUser!.uid)
+                                      .userDetail(
+                                    int.parse(_incomeText.text),
+                                    dropdownValue,
+                                  )
+                                      .then((value) async {
+                                    if (value == null) {
+                                      await helper_function
+                                          .saveOnboardingStatus(true);
+                                      Navigator.of(context)
+                                          .pushReplacementNamed('/home');
+                                    } else {
+                                      ScaffoldMessenger.of(context)
+                                          .showSnackBar(SnackBar(
+                                              content: Text(
+                                                  "Some issue has occured ")));
+                                    }
+                                  });
+                                }
+                              })),
                         ),
                       )
                     ],

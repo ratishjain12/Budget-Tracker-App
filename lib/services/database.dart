@@ -21,4 +21,20 @@ class Database {
       'Date': Timestamp.now(),
     });
   }
+
+  Future userDetail(int monthly, String savingmode) async {
+    return await userCollection.doc(uid).update({
+      'monthlyincome': monthly,
+      'savingmode': savingmode,
+    });
+  }
+
+  Future userDetailCustomSaving(
+      int monthly, String savingmode, int amountSave) async {
+    return await userCollection.doc(uid).update({
+      'monthlyincome': monthly,
+      'savingmode': savingmode,
+      'amountSave': amountSave,
+    });
+  }
 }

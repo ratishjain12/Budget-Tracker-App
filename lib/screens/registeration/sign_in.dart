@@ -88,6 +88,12 @@ class _SignInState extends State<SignIn> {
                               height: screenHeight * 0.05,
                             ),
                             TextFormField(
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "please enter email";
+                                }
+                                return null;
+                              },
                               controller: _email,
                               decoration: InputDecoration(
                                 border: OutlineInputBorder(
@@ -104,6 +110,12 @@ class _SignInState extends State<SignIn> {
                               height: screenHeight * 0.03,
                             ),
                             TextFormField(
+                              validator: (val) {
+                                if (val == null || val.isEmpty) {
+                                  return "please enter password";
+                                }
+                                return null;
+                              },
                               controller: _password,
                               obscureText: true,
                               decoration: InputDecoration(
@@ -131,7 +143,7 @@ class _SignInState extends State<SignIn> {
                             ),
                             CustomButton(
                               onPressed: () {
-                                login();
+                                login(context);
                               },
                               child: Text(
                                 "Login",
@@ -157,21 +169,19 @@ class _SignInState extends State<SignIn> {
     );
   }
 
-  login() async {
+  login(BuildContext context) async {
     if (_formKey.currentState!.validate()) {
       setState(() {
         _isLoading = true;
       });
       await authService
-          .emailPasswordSignIn(_email.text, _password.text)
+          .emailPasswordSignIn(_email.text, _password.text, context)
           .then((value) async {
         if (value == true) {
           await helper_function.saveUserLoggedInStatus(true);
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/home', (route) => false);
         } else {
-          Fluttertoast.showToast(
-              msg: "Invalid email or password", backgroundColor: Colors.red);
           setState(() {
             _isLoading = false;
           });
