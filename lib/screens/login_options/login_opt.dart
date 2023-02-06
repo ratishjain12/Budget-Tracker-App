@@ -118,8 +118,6 @@ class _Login_optState extends State<Login_opt> {
                                   MaterialPageRoute(
                                       builder: (context) => HomePage()));
                             } else {
-                              await helper_function
-                                  .saveUserLoggedInStatus(true);
                               Navigator.of(context).pushReplacement(
                                   MaterialPageRoute(
                                       builder: (context) => Que()));
