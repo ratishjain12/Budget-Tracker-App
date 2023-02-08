@@ -184,7 +184,7 @@ class _HomePageState extends State<HomePage> {
                         // ),
                         ChartWidget(
                           isLegend: true,
-                          expenses: 20000,
+                          expenses: 2000,
                           savings: 30000,
                           chartColor: [Colors.blue, Colors.yellow],
                         ),

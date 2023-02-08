@@ -27,13 +27,15 @@ class _ChartWidgetState extends State<ChartWidget> {
   @override
   void initState() {
     // TODO: implement initState
-    _chartData = getData();
-    _tooltipBehaviour = TooltipBehavior(enable: true);
+    // _chartData = getData();
+
     super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
+    _tooltipBehaviour = TooltipBehavior(enable: true);
+    _chartData = getData();
     return SfCircularChart(
       palette: widget.chartColor,
       // title: ChartTitle(text: "Your this month's expenses \n (in RS)"),
@@ -43,7 +45,8 @@ class _ChartWidgetState extends State<ChartWidget> {
           dataSource: _chartData,
           xValueMapper: (ChartData data, _) => data.name,
           yValueMapper: (ChartData data, _) => data.expense,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelSettings: DataLabelSettings(
+              isVisible: true, labelPosition: ChartDataLabelPosition.outside),
           enableTooltip: true,
         ),
       ],
