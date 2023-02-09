@@ -2,10 +2,12 @@ import 'package:flutter/material.dart';
 
 class TileWidget extends StatelessWidget {
   String name;
+  final Icon ic;
   // Function()? onTap;
   TileWidget({
     Key? key,
-    required this.name, //required this.onTap
+    required this.name,
+    required this.ic, //required this.onTap
   }) : super(key: key);
 
   @override
@@ -15,10 +17,29 @@ class TileWidget extends StatelessWidget {
     return GestureDetector(
       onTap: () {},
       child: Container(
-        color: Colors.grey,
         height: screenHeight * 0.07,
         width: screenWidth * 0.25,
-        child: Center(child: Text(name)),
+        decoration: BoxDecoration(
+          color: Colors.white,
+          borderRadius: BorderRadius.circular(10),
+          boxShadow: [
+            BoxShadow(
+              color: Colors.grey,
+              offset: Offset(2, 2),
+              blurRadius: 2,
+              spreadRadius: 2,
+            ),
+          ],
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              ic,
+              Text(name),
+            ],
+          ),
+        ),
       ),
     );
   }
