@@ -22,9 +22,10 @@ const List<String> options = <String>[
   "Food & Drinks",
   "Shopping",
   "Housing",
-  "Life & Entertainment",
+  "Life & Health",
   "Investments",
   "Vehicle & Transportation",
+  "Entertainment",
   "Other",
 ];
 
