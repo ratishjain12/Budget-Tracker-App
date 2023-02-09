@@ -27,8 +27,13 @@ class _ChartWidgetState extends State<ChartWidget> {
   @override
   void initState() {
     // TODO: implement initState
+<<<<<<< HEAD
 
     // _tooltipBehaviour = TooltipBehavior(enable: true);
+=======
+    // _chartData = getData();
+
+>>>>>>> origin/main
     super.initState();
   }
 
@@ -46,6 +51,10 @@ class _ChartWidgetState extends State<ChartWidget> {
 
   @override
   Widget build(BuildContext context) {
+<<<<<<< HEAD
+=======
+    _tooltipBehaviour = TooltipBehavior(enable: true);
+>>>>>>> origin/main
     _chartData = getData();
     return SfCircularChart(
       palette: widget.chartColor,
@@ -56,7 +65,8 @@ class _ChartWidgetState extends State<ChartWidget> {
           dataSource: _chartData,
           xValueMapper: (ChartData data, _) => data.name,
           yValueMapper: (ChartData data, _) => data.expense,
-          dataLabelSettings: DataLabelSettings(isVisible: true),
+          dataLabelSettings: DataLabelSettings(
+              isVisible: true, labelPosition: ChartDataLabelPosition.outside),
           enableTooltip: true,
         ),
       ],

@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/charts_page.dart';
 import 'package:budget_tracker/screens/registeration/forgot_pwd.dart';
 import 'package:budget_tracker/widgets/chart.dart';
 import 'package:budget_tracker/screens/helper/helper_function.dart';
