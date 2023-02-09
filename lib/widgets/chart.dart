@@ -34,8 +34,8 @@ class _ChartWidgetState extends State<ChartWidget> {
 
   getData() {
     List<ChartData> data = [
-      ChartData(name: 'Savings', expense: widget.expenses),
-      ChartData(name: 'Expenses', expense: widget.savings),
+      ChartData(name: 'Expenses', expense: widget.expenses),
+      ChartData(name: 'Savings', expense: widget.savings),
       // ChartData(name: 'Entertainment', expense: 1000),
       // ChartData(name: 'Bills', expense: 3300),
       // ChartData(name: 'Investment', expense: 2500),
@@ -58,7 +58,7 @@ class _ChartWidgetState extends State<ChartWidget> {
           xValueMapper: (ChartData data, _) => data.name,
           yValueMapper: (ChartData data, _) => data.expense,
           dataLabelSettings: DataLabelSettings(
-              isVisible: true, labelPosition: ChartDataLabelPosition.outside),
+              isVisible: true, overflowMode: OverflowMode.shift),
           enableTooltip: true,
         ),
       ],
@@ -73,7 +73,7 @@ class _ChartWidgetState extends State<ChartWidget> {
 
 class ChartData {
   String? name;
-  int? expense;
+  num? expense;
   ChartData({required this.name, required this.expense});
 }
 

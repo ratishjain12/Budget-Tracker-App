@@ -15,10 +15,18 @@ class Database {
   }
 
   Future addExpense(String userid, int expense, String category) async {
-    return await userCollection.doc(userid).collection('expense').add({
+    num totalExpenses;
+    await userCollection.doc(userid).collection('expense').add({
       'amount': expense,
       'category': category,
       'Date': Timestamp.now(),
+    });
+
+    DocumentSnapshot s = await userCollection.doc(userid).get();
+    totalExpenses = s['totalExpense'];
+
+    return await userCollection.doc(userid).update({
+      'totalExpense': totalExpenses + expense,
     });
   }
 
@@ -26,6 +34,7 @@ class Database {
     return await userCollection.doc(uid).update({
       'monthlyincome': monthly,
       'savingmode': savingmode,
+      'totalExpense': 0,
     });
   }
 
@@ -35,6 +44,7 @@ class Database {
       'monthlyincome': monthly,
       'savingmode': savingmode,
       'amountSave': amountSave,
+      'totalExpense': 0,
     });
   }
 
@@ -50,5 +60,7 @@ class Database {
     return s;
   }
 
-  Future fetchUserExpenses(String userid) async {}
+  Future fetchUserExpenses(String userid) async {
+    return await userCollection.doc(userid).collection('expense').snapshots();
+  }
 }

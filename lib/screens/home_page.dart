@@ -7,9 +7,8 @@ import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-import 'package:firebase_core/firebase_core.dart';
+
 import 'package:flutter/material.dart';
-import 'package:flutter/src/widgets/framework.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 
 class HomePage extends StatefulWidget {
@@ -29,55 +28,55 @@ const List<String> options = <String>[
   "Other",
 ];
 
+const List<Map<String, dynamic>> expenseData = [
+  {
+    'title': "Shopping",
+    'date': "6 January 2023",
+    'logo': "",
+    'money': 50,
+  },
+  {
+    'title': "Entertainment",
+    'date': "6 January 2023",
+    'logo': "",
+    'money': 50,
+  },
+  {
+    'title': "Transport",
+    'date': "6 January 2023",
+    'logo': "",
+    'money': 50,
+  },
+  {
+    'title': "Food & Drinks",
+    'date': "6 January 2023",
+    'logo': "",
+    'money': 50,
+  },
+  {
+    'title': "Bills",
+    'date': "6 January 2023",
+    'logo': "",
+    'money': 50,
+  },
+];
+
 class _HomePageState extends State<HomePage> {
-  QuerySnapshot? data;
   bool _isLoading = false;
+
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
-
-  List<Map<String, dynamic>> expenseData = [
-    {
-      'title': "Shopping",
-      'date': "6 January 2023",
-      'logo': "",
-      'money': 50,
-    },
-    {
-      'title': "Entertainment",
-      'date': "6 January 2023",
-      'logo': "",
-      'money': 50,
-    },
-    {
-      'title': "Transport",
-      'date': "6 January 2023",
-      'logo': "",
-      'money': 50,
-    },
-    {
-      'title': "Food & Drinks",
-      'date': "6 January 2023",
-      'logo': "",
-      'money': 50,
-    },
-    {
-      'title': "Bills",
-      'date': "6 January 2023",
-      'logo': "",
-      'money': 50,
-    },
-  ];
+  int _expense = 0;
+  int _savings = 0;
+  QuerySnapshot? data;
 
   @override
   void initState() {
     // TODO: implement initState
-    fetching();
+
     super.initState();
-
-    // fetchUserExpense();
+    fetching();
   }
-
-  // fetchUserExpense() async {}
 
   fetching() async {
     setState(() {
@@ -91,6 +90,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _isLoading = false;
             data = value;
+
             print(data);
           });
         }
@@ -103,6 +103,7 @@ class _HomePageState extends State<HomePage> {
           setState(() {
             _isLoading = false;
             data = value;
+
             print(data);
           });
         }
@@ -208,39 +209,9 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // Column(
-                              //   crossAxisAlignment: CrossAxisAlignment.start,
-                              //   children: [
-                              //     Text(
-                              //       "Expenses",
-                              //       style: TextStyle(
-                              //         fontSize: 24,
-                              //       ),
-                              //     ),
-                              //     Text(
-                              //       "100000" + " " + "\u{20B9}",
-                              //       style: TextStyle(
-                              //         fontSize: 18,
-                              //       ),
-                              //     ),
-                              //     Padding(padding: EdgeInsets.all(7)),
-                              //     Text(
-                              //       "Savings",
-                              //       style: TextStyle(
-                              //         fontSize: 24,
-                              //       ),
-                              //     ),
-                              //     Text(
-                              //       "300000" + " " + "\u{20B9}",
-                              //       style: TextStyle(
-                              //         fontSize: 18,
-                              //       ),
-                              //     ),
-                              //   ],
-                              // ),
                               ChartWidget(
                                 isLegend: true,
-                                expenses: 2000,
+                                expenses: data!.docs[0]['totalExpense'],
                                 savings: data!.docs[0]['monthlyincome'],
                                 chartColor: [Colors.blue, Colors.yellow],
                               ),
@@ -264,7 +235,7 @@ class _HomePageState extends State<HomePage> {
                     ),
                     ListView.builder(
                       shrinkWrap: true,
-                      itemCount: 5,
+                      itemCount: expenseData.length,
                       itemBuilder: ((context, index) {
                         return Padding(
                           padding: const EdgeInsets.symmetric(horizontal: 18.0),
@@ -368,7 +339,7 @@ class _HomePageState extends State<HomePage> {
                         ),
                         CustomButton(
                             child: Text("Submit"),
-                            onPressed: () {
+                            onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 if (opt == null) {
                                   Fluttertoast.showToast(
@@ -379,11 +350,12 @@ class _HomePageState extends State<HomePage> {
                                   return;
                                 }
 
-                                addExpense(
+                                await addExpense(
+                                    context,
                                     FirebaseAuth.instance.currentUser!.uid,
                                     int.parse(_expenseController.text),
                                     opt!);
-                                Navigator.of(context).pop();
+                                Navigator.of(context).pop(fetching());
                               }
                             }),
                       ],
@@ -397,18 +369,17 @@ class _HomePageState extends State<HomePage> {
   }
 }
 
-addExpense(String userid, int expense, String category) async {
+addExpense(
+    BuildContext context, String userid, int expense, String category) async {
   await Database(uid: FirebaseAuth.instance.currentUser!.uid)
       .addExpense(userid, expense, category)
       .then((value) {
-    if (value) {
-      Fluttertoast.showToast(
-        msg: "Expense added",
-        backgroundColor: Colors.green,
-      );
+    if (value != null) {
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Expense added.")));
     } else {
-      Fluttertoast.showToast(
-          msg: "Failed to add expense", backgroundColor: Colors.red);
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Expense addition failed.")));
     }
   });
 }
