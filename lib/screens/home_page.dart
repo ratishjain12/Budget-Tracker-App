@@ -71,12 +71,13 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
-    super.initState();
     fetching();
-    fetchUserExpense();
+    super.initState();
+
+    // fetchUserExpense();
   }
 
-  fetchUserExpense() async {}
+  // fetchUserExpense() async {}
 
   fetching() async {
     setState(() {
