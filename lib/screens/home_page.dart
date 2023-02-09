@@ -10,6 +10,7 @@ import 'package:firebase_auth/firebase_auth.dart';
 
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
+import 'package:intl/intl.dart';
 
 class HomePage extends StatefulWidget {
   const HomePage({Key? key}) : super(key: key);
@@ -70,6 +71,7 @@ class _HomePageState extends State<HomePage> {
   int _expense = 0;
   int _savings = 0;
   QuerySnapshot? data;
+  Stream<QuerySnapshot>? expenseUsers;
 
   @override
   void initState() {
@@ -77,6 +79,20 @@ class _HomePageState extends State<HomePage> {
 
     super.initState();
     fetching();
+    fetchUserExpenses();
+  }
+
+  fetchUserExpenses() async {
+    await Database(uid: FirebaseAuth.instance.currentUser!.uid)
+        .fetchUserExpenses(FirebaseAuth.instance.currentUser!.uid)
+        .then((value) {
+      if (value != null) {
+        setState(() {
+          expenseUsers = value;
+          print(expenseUsers);
+        });
+      }
+    });
   }
 
   fetching() async {
@@ -213,7 +229,8 @@ class _HomePageState extends State<HomePage> {
                               ChartWidget(
                                 isLegend: true,
                                 expenses: data!.docs[0]['totalExpense'],
-                                savings: data!.docs[0]['monthlyincome'],
+                                savings: data!.docs[0]['monthlyincome'] -
+                                    data!.docs[0]['totalExpense'],
                                 chartColor: [Colors.blue, Colors.yellow],
                               ),
                             ],
@@ -234,26 +251,28 @@ class _HomePageState extends State<HomePage> {
                     SizedBox(
                       height: screenHeight * 0.01,
                     ),
-                    ListView.builder(
-                      shrinkWrap: true,
-                      itemCount: expenseData.length,
-                      itemBuilder: ((context, index) {
-                        return Padding(
-                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                          child: ExpenseTile(
-                            title: expenseData[index]['title'],
-                            money: expenseData[index]['money'],
-                            date: expenseData[index]['date'],
-                          ),
-                        );
-                      }),
-                    ),
+                    // ListView.builder(
+                    //   shrinkWrap: true,
+                    //   itemCount: expenseData.length,
+                    //   itemBuilder: ((context, index) {
+                    //     return Padding(
+                    //       padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                    //       child: ExpenseTile(
+                    //         title: expenseData[index]['title'],
+                    //         money: expenseData[index]['money'],
+                    //         date: expenseData[index]['date'],
+                    //       ),
+                    //     );
+                    //   }),
+                    // ),
 
-                    CustomButton(
-                        child: Text("Sign out"),
-                        onPressed: () {
-                          signOut(context);
-                        }),
+                    expensesList(),
+
+                    // CustomButton(
+                    //     child: Text("Sign out"),
+                    //     onPressed: () {
+                    //       signOut(context);
+                    //     }),
 
                     // Container(
                     //   width: 50,
@@ -366,6 +385,62 @@ class _HomePageState extends State<HomePage> {
               ),
             );
           }));
+        });
+  }
+
+  expensesList() {
+    return StreamBuilder(
+        stream: expenseUsers,
+        builder: (context, AsyncSnapshot snapshot) {
+          if (snapshot.hasData) {
+            if (snapshot.data.docs.length != 0) {
+              return ListView.builder(
+                  shrinkWrap: true,
+                  itemCount: snapshot.data.docs.length,
+                  itemBuilder: ((context, index) {
+                    return Padding(
+                      padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                      child: ExpenseTile(
+                        title: snapshot.data.docs[index]['category'],
+                        money: snapshot.data.docs[index]['amount'],
+                        date: DateFormat.yMMMd()
+                            .add_jm()
+                            .format(snapshot.data.docs[index]['Date'].toDate()),
+                      ),
+                    );
+                  }));
+            } else {
+              return Container(
+                height: MediaQuery.of(context).size.height * 0.3,
+                child: Center(
+                    child: MaterialButton(
+                  onPressed: () {
+                    popupDialog(context);
+                  },
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      Icon(
+                        Icons.add_circle,
+                        size: 56,
+                        color: Colors.grey[700],
+                      ),
+                      Padding(padding: EdgeInsets.all(8)),
+                      Text(
+                        "No recent expenses",
+                        style: TextStyle(fontSize: 24),
+                      ),
+                    ],
+                  ),
+                )),
+              );
+            }
+          } else {
+            return Container(
+              child: CircularProgressIndicator(),
+            );
+          }
         });
   }
 }
