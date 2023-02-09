@@ -5,6 +5,7 @@ import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
@@ -29,6 +30,8 @@ const List<String> options = <String>[
 ];
 
 class _HomePageState extends State<HomePage> {
+  QuerySnapshot? data;
+  bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
 
@@ -64,6 +67,48 @@ class _HomePageState extends State<HomePage> {
       'money': 50,
     },
   ];
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    fetching();
+    fetchUserExpense();
+  }
+
+  fetchUserExpense() async {}
+
+  fetching() async {
+    setState(() {
+      _isLoading = true;
+    });
+    if (FirebaseAuth.instance.currentUser!.email != null) {
+      await Database()
+          .fetchUserDetails(FirebaseAuth.instance.currentUser!.email)
+          .then((value) {
+        if (value != null) {
+          setState(() {
+            _isLoading = false;
+            data = value;
+            print(data);
+          });
+        }
+      });
+    } else {
+      await Database()
+          .fetchUserDetailsUser(FirebaseAuth.instance.currentUser!.displayName)
+          .then((value) {
+        if (value != null) {
+          setState(() {
+            _isLoading = false;
+            data = value;
+            print(data);
+          });
+        }
+      });
+    }
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
@@ -77,6 +122,12 @@ class _HomePageState extends State<HomePage> {
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
+      appBar: AppBar(
+        title: Text(
+          "Budget Tracker",
+        ),
+        centerTitle: true,
+      ),
       floatingActionButton: Container(
         width: 50,
         height: 50,
@@ -126,115 +177,119 @@ class _HomePageState extends State<HomePage> {
             ),
           ]),
       backgroundColor: AppColors.primaryColor,
-      body: SingleChildScrollView(
-        child: SafeArea(
-          child: Column(
-            children: [
-              Padding(
-                padding:
-                    const EdgeInsets.symmetric(horizontal: 18.0, vertical: 14),
-                child: Container(
-                  width: double.infinity,
-                  height: screenHeight * 0.25,
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(30),
-                    boxShadow: [
-                      BoxShadow(
-                        blurRadius: 10.0,
-                        spreadRadius: 1,
-                        color: Colors.grey,
-                      )
-                    ],
-                  ),
-                  child: Container(
-                    margin: EdgeInsets.all(18),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        // Column(
-                        //   crossAxisAlignment: CrossAxisAlignment.start,
-                        //   children: [
-                        //     Text(
-                        //       "Expenses",
-                        //       style: TextStyle(
-                        //         fontSize: 24,
-                        //       ),
-                        //     ),
-                        //     Text(
-                        //       "100000" + " " + "\u{20B9}",
-                        //       style: TextStyle(
-                        //         fontSize: 18,
-                        //       ),
-                        //     ),
-                        //     Padding(padding: EdgeInsets.all(7)),
-                        //     Text(
-                        //       "Savings",
-                        //       style: TextStyle(
-                        //         fontSize: 24,
-                        //       ),
-                        //     ),
-                        //     Text(
-                        //       "300000" + " " + "\u{20B9}",
-                        //       style: TextStyle(
-                        //         fontSize: 18,
-                        //       ),
-                        //     ),
-                        //   ],
-                        // ),
-                        ChartWidget(
-                          isLegend: true,
-                          expenses: 20000,
-                          savings: 30000,
-                          chartColor: [Colors.blue, Colors.yellow],
+      body: _isLoading
+          ? Center(
+              child: CircularProgressIndicator(),
+            )
+          : SingleChildScrollView(
+              child: SafeArea(
+                child: Column(
+                  children: [
+                    Padding(
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 18.0, vertical: 14),
+                      child: Container(
+                        width: double.infinity,
+                        height: screenHeight * 0.22,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          borderRadius: BorderRadius.circular(30),
+                          boxShadow: [
+                            BoxShadow(
+                              blurRadius: 10.0,
+                              spreadRadius: 1,
+                              color: Colors.grey,
+                            )
+                          ],
                         ),
-                      ],
+                        child: Container(
+                          margin: EdgeInsets.all(18),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              // Column(
+                              //   crossAxisAlignment: CrossAxisAlignment.start,
+                              //   children: [
+                              //     Text(
+                              //       "Expenses",
+                              //       style: TextStyle(
+                              //         fontSize: 24,
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       "100000" + " " + "\u{20B9}",
+                              //       style: TextStyle(
+                              //         fontSize: 18,
+                              //       ),
+                              //     ),
+                              //     Padding(padding: EdgeInsets.all(7)),
+                              //     Text(
+                              //       "Savings",
+                              //       style: TextStyle(
+                              //         fontSize: 24,
+                              //       ),
+                              //     ),
+                              //     Text(
+                              //       "300000" + " " + "\u{20B9}",
+                              //       style: TextStyle(
+                              //         fontSize: 18,
+                              //       ),
+                              //     ),
+                              //   ],
+                              // ),
+                              ChartWidget(
+                                isLegend: true,
+                                expenses: 2000,
+                                savings: data!.docs[0]['monthlyincome'],
+                                chartColor: [Colors.blue, Colors.yellow],
+                              ),
+                            ],
+                          ),
+                        ),
+                      ),
                     ),
-                  ),
+
+                    SizedBox(
+                      height: screenHeight * 0.01,
+                    ),
+                    Text(
+                      "Recent Expenses",
+                      style: TextStyle(
+                        fontSize: 24,
+                      ),
+                    ),
+                    SizedBox(
+                      height: screenHeight * 0.01,
+                    ),
+                    ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: 5,
+                      itemBuilder: ((context, index) {
+                        return Padding(
+                          padding: const EdgeInsets.symmetric(horizontal: 18.0),
+                          child: ExpenseTile(
+                            title: expenseData[index]['title'],
+                            money: expenseData[index]['money'],
+                            date: expenseData[index]['date'],
+                          ),
+                        );
+                      }),
+                    ),
+
+                    CustomButton(
+                        child: Text("Sign out"),
+                        onPressed: () {
+                          signOut(context);
+                        }),
+
+                    // Container(
+                    //   width: 50,
+                    //   child: ChartWidget(),
+                    // ),
+                  ],
                 ),
               ),
-
-              SizedBox(
-                height: screenHeight * 0.01,
-              ),
-              Text(
-                "Recent Expenses",
-                style: TextStyle(
-                  fontSize: 24,
-                ),
-              ),
-              SizedBox(
-                height: screenHeight * 0.01,
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: 5,
-                itemBuilder: ((context, index) {
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 18.0),
-                    child: ExpenseTile(
-                      title: expenseData[index]['title'],
-                      money: expenseData[index]['money'],
-                      date: expenseData[index]['date'],
-                    ),
-                  );
-                }),
-              ),
-
-              CustomButton(
-                  child: Text("Sign out"),
-                  onPressed: () {
-                    signOut(context);
-                  }),
-
-              // Container(
-              //   width: 50,
-              //   child: ChartWidget(),
-              // ),
-            ],
-          ),
-        ),
-      ),
+            ),
     );
   }
 

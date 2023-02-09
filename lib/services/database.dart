@@ -37,4 +37,18 @@ class Database {
       'amountSave': amountSave,
     });
   }
+
+  Future fetchUserDetails(String? email) async {
+    QuerySnapshot s =
+        await userCollection.where("email", isEqualTo: email).get();
+    return s;
+  }
+
+  Future fetchUserDetailsUser(String? username) async {
+    QuerySnapshot s =
+        await userCollection.where("username", isEqualTo: username).get();
+    return s;
+  }
+
+  Future fetchUserExpenses(String userid) async {}
 }
