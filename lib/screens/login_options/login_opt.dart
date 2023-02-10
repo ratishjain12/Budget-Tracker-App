@@ -147,20 +147,3 @@ class _Login_optState extends State<Login_opt> {
     );
   }
 }
-
-// signInWithGoogle() async {
-//   GoogleSignInAccount? googleUser = await GoogleSignIn().signIn();
-
-//   GoogleSignInAuthentication? googleAuth = await googleUser?.authentication;
-
-//   AuthCredential credential = GoogleAuthProvider.credential(
-//     accessToken: googleAuth?.accessToken,
-//     idToken: googleAuth?.idToken,
-//   );
-//   try {
-//     UserCredential user =
-//         await FirebaseAuth.instance.signInWithCredential(credential);
-//   } catch (e) {
-//     print(e);
-//   }
-// }
