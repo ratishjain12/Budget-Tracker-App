@@ -61,6 +61,10 @@ class Database {
   }
 
   Future fetchUserExpenses(String userid) async {
-    return await userCollection.doc(userid).collection('expense').snapshots();
+    return await userCollection
+        .doc(userid)
+        .collection('expense')
+        .limit(4)
+        .snapshots();
   }
 }
