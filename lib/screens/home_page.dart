@@ -119,109 +119,109 @@ class _HomePageState extends State<HomePage>
   String? opt;
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
-    return Scaffold(
-      appBar: AppBar(
-        leading: Builder(builder: (BuildContext context) {
-          return IconButton(
-            icon: const Icon(Icons.settings),
-            onPressed: () {
-              Scaffold.of(context).openDrawer();
-            },
-            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
-          );
-        }),
-        title: Text(
-          "Budget Tracker",
-        ),
-        centerTitle: true,
-      ),
-      drawer: Drawer(
-        backgroundColor: AppColors.secondaryColor,
-        child: Drawer(
-          child: Padding(
-            padding: EdgeInsets.symmetric(vertical: 50),
-            child: ListView(
-              children: [
-                Icon(
-                  Icons.account_circle,
-                  size: 150,
-                  color: AppColors.secondaryColor,
-                ),
-                Center(
-                    child: Text(
-                  data!.docs[0]['username'],
-                  style: TextStyle(fontWeight: FontWeight.bold),
-                )),
-                SizedBox(
-                  height: 30,
-                ),
-                Divider(
-                  height: 2,
-                ),
-                ListTile(
-                  onTap: () {},
-                  title: Text(
-                    'Change Income',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  leading: Icon(
-                    Icons.monetization_on,
-                    color: AppColors.secondaryColor,
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                ),
-                ListTile(
-                  onTap: () {
-                    signOut(context);
+    return _isLoading
+        ? Center(
+            child: CircularProgressIndicator(),
+          )
+        : Scaffold(
+            appBar: AppBar(
+              leading: Builder(builder: (BuildContext context) {
+                return IconButton(
+                  icon: const Icon(Icons.settings),
+                  onPressed: () {
+                    Scaffold.of(context).openDrawer();
                   },
-                  title: Text(
-                    'Logout',
-                    style: TextStyle(
-                      fontSize: 18,
-                    ),
-                  ),
-                  leading: Icon(
-                    Icons.logout,
-                    color: AppColors.secondaryColor,
-                  ),
-                  contentPadding:
-                      EdgeInsets.symmetric(horizontal: 20, vertical: 5),
-                ),
-              ],
+                  tooltip:
+                      MaterialLocalizations.of(context).openAppDrawerTooltip,
+                );
+              }),
+              title: Text(
+                "Budget Tracker",
+              ),
+              centerTitle: true,
             ),
-          ),
-        ),
-      ),
-      floatingActionButton: Container(
-        width: 50,
-        height: 50,
-        child: FloatingActionButton(
-          onPressed: () {
-            setState(() {
-              opt = null;
-            });
-            popupDialog(context);
-          },
-          child: Icon(
-            Icons.add,
-            size: 40,
-            color: Colors.white,
-          ),
-          backgroundColor: AppColors.secondaryColor,
-        ),
-      ),
-      backgroundColor: AppColors.primaryColor,
-      body: _isLoading
-          ? Center(
-              child: CircularProgressIndicator(),
-            )
-          : SingleChildScrollView(
+            drawer: Drawer(
+              backgroundColor: AppColors.secondaryColor,
+              child: Drawer(
+                child: Padding(
+                  padding: EdgeInsets.symmetric(vertical: 50),
+                  child: ListView(
+                    children: [
+                      Icon(
+                        Icons.account_circle,
+                        size: 150,
+                        color: AppColors.secondaryColor,
+                      ),
+                      Center(
+                          child: Text(
+                        data!.docs[0]["username"],
+                        style: TextStyle(fontWeight: FontWeight.bold),
+                      )),
+                      SizedBox(
+                        height: 30,
+                      ),
+                      Divider(
+                        height: 2,
+                      ),
+                      ListTile(
+                        onTap: () {},
+                        title: Text(
+                          'Change Income',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.monetization_on,
+                          color: AppColors.secondaryColor,
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      ),
+                      ListTile(
+                        onTap: () {
+                          signOut(context);
+                        },
+                        title: Text(
+                          'Logout',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.logout,
+                          color: AppColors.secondaryColor,
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+            floatingActionButton: Container(
+              width: 50,
+              height: 50,
+              child: FloatingActionButton(
+                onPressed: () {
+                  setState(() {
+                    opt = null;
+                  });
+                  popupDialog(context);
+                },
+                child: Icon(
+                  Icons.add,
+                  size: 40,
+                  color: Colors.white,
+                ),
+                backgroundColor: AppColors.secondaryColor,
+              ),
+            ),
+            backgroundColor: AppColors.primaryColor,
+            body: SingleChildScrollView(
               physics: ScrollPhysics(),
               child: SafeArea(
                 child: Column(
@@ -304,7 +304,7 @@ class _HomePageState extends State<HomePage>
                 ),
               ),
             ),
-    );
+          );
   }
 
   popupDialog(BuildContext context) {

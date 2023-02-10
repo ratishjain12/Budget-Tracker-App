@@ -22,9 +22,8 @@ class _BaseState extends State<Base> {
   @override
   void initState() {
     // TODO: implement initState
-
-    super.initState();
     pageController = new PageController();
+    super.initState();
   }
 
   @override
@@ -51,6 +50,7 @@ class _BaseState extends State<Base> {
   Widget build(BuildContext context) {
     return Scaffold(
       bottomNavigationBar: BottomNavigationBar(
+          type: BottomNavigationBarType.fixed,
           unselectedItemColor: Colors.grey,
           selectedItemColor: AppColors.secondaryColor,
           unselectedLabelStyle: TextStyle(color: Colors.grey),
@@ -79,6 +79,7 @@ class _BaseState extends State<Base> {
             ),
           ]),
       body: PageView(
+        physics: NeverScrollableScrollPhysics(),
         controller: pageController,
         children: _pages,
         onPageChanged: onPageChanged,
