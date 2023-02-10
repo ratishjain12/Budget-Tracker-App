@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/base.dart';
 import 'package:budget_tracker/screens/registeration/forgot_pwd.dart';
 
 import 'package:budget_tracker/screens/helper/helper_function.dart';
@@ -51,7 +52,7 @@ class _MyAppState extends State<MyApp> {
         colorScheme:
             ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
       ),
-      home: _isSignedIn ? HomePage() : Login_opt(),
+      home: _isSignedIn ? Base() : Login_opt(),
       routes: {
         // '/graph': (context) => ChartWidget(),
         '/login_opt': (context) => Login_opt(),
