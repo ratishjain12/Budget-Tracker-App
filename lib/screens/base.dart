@@ -13,6 +13,7 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
+  final List<Widget> _pages = <Widget>[HomePage(), ChartPage()];
   late PageController pageController;
 
   // bool _isLoading = false;
@@ -26,48 +27,24 @@ class _BaseState extends State<Base> {
     pageController = new PageController();
   }
 
-  // fetching() async {
-  //   setState(() {
-  //     _isLoading = true;
-  //   });
-  //   if (FirebaseAuth.instance.currentUser!.email != null) {
-  //     await Database()
-  //         .fetchUserDetails(FirebaseAuth.instance.currentUser!.email)
-  //         .then((value) {
-  //       if (value != null) {
-  //         setState(() {
-  //           _isLoading = false;
-  //           data = value;
+  @override
+  void dispose() {
+    pageController.dispose();
+    super.dispose();
+  }
 
-  //           print(data);
-  //         });
-  //       } else {
-  //         _isLoading = false;
-  //         ScaffoldMessenger.of(context)
-  //             .showSnackBar(SnackBar(content: Text("Error occured")));
-  //       }
-  //     });
-  //   } else {
-  //     await Database()
-  //         .fetchUserDetailsUser(FirebaseAuth.instance.currentUser!.displayName)
-  //         .then((value) {
-  //       if (value != null) {
-  //         setState(() {
-  //           _isLoading = false;
-  //           data = value;
+  _onTapped(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+    pageController.jumpToPage(index);
+  }
 
-  //           print(data);
-  //         });
-  //       } else {
-  //         _isLoading = false;
-  //         ScaffoldMessenger.of(context)
-  //             .showSnackBar(SnackBar(content: Text("Error occured")));
-  //       }
-  //     });
-  //   }
-  // }
-
-  List<Widget> _pages = <Widget>[HomePage(), ChartPage()];
+  void onPageChanged(int index) {
+    setState(() {
+      _selectedIndex = index;
+    });
+  }
 
   int _selectedIndex = 0;
   @override
@@ -79,11 +56,7 @@ class _BaseState extends State<Base> {
           unselectedLabelStyle: TextStyle(color: Colors.grey),
           showUnselectedLabels: true,
           currentIndex: _selectedIndex,
-          onTap: (val) {
-            setState(() {
-              _selectedIndex = val;
-            });
-          },
+          onTap: _onTapped,
           items: [
             BottomNavigationBarItem(
               icon: Icon(
@@ -105,7 +78,11 @@ class _BaseState extends State<Base> {
               label: "Bills",
             ),
           ]),
-      body: _pages.elementAt(_selectedIndex),
+      body: PageView(
+        controller: pageController,
+        children: _pages,
+        onPageChanged: onPageChanged,
+      ),
     );
   }
 }

@@ -5,7 +5,6 @@ import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
-import 'package:budget_tracker/screens/charts_page.dart';
 import 'package:budget_tracker/screens/login_options/login_opt.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/services/database.dart';
@@ -33,7 +32,11 @@ const List<String> options = <String>[
   "Other",
 ];
 
-class _HomePageState extends State<HomePage> {
+class _HomePageState extends State<HomePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  bool get wantKeepAlive => true;
+
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
@@ -115,6 +118,7 @@ class _HomePageState extends State<HomePage> {
   String? opt;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
@@ -212,7 +216,7 @@ class _HomePageState extends State<HomePage> {
         ),
       ),
       backgroundColor: AppColors.primaryColor,
-      body: (_isLoading && data != null)
+      body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
             )
@@ -243,13 +247,13 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              // ChartWidget(
-                              //   isLegend: true,
-                              //   expenses: data!.docs[0]['totalExpense'],
-                              //   savings: data!.docs[0]['monthlyincome'] -
-                              //       data!.docs[0]['totalExpense'],
-                              //   chartColor: [Colors.blue, Colors.yellow],
-                              // ),
+                              ChartWidget(
+                                isLegend: true,
+                                expenses: data!.docs[0]['totalExpense'],
+                                savings: data!.docs[0]['monthlyincome'] -
+                                    data!.docs[0]['totalExpense'],
+                                chartColor: [Colors.blue, Colors.yellow],
+                              ),
                             ],
                           ),
                         ),
