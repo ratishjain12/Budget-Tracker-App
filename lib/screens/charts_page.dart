@@ -1,4 +1,5 @@
 import 'package:budget_tracker/widgets/category_tile.dart';
+import 'package:budget_tracker/widgets/colors.dart';
 import 'package:flutter/material.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
@@ -15,13 +16,14 @@ class _ChartPageState extends State<ChartPage> {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     final List<ChartData> chartData = [
-      ChartData('Food', 10000),
+      ChartData('Food & Beverages', 10000),
       ChartData('Shopping', 3000),
-      ChartData('Housing', 100),
-      ChartData('Life', 2000),
-      ChartData('investment', 2000),
-      ChartData('vehicle', 3000),
-      ChartData('Other', 2000),
+      ChartData('Housing', 1000),
+      ChartData('Health', 2000),
+      ChartData('Investment', 2000),
+      ChartData('Vehicle', 3000),
+      ChartData('Entertainment', 2000),
+      ChartData('Others', 2000),
     ];
     return Scaffold(
       body: SingleChildScrollView(
@@ -30,7 +32,7 @@ class _ChartPageState extends State<ChartPage> {
           child: Column(
             children: [
               Container(
-                margin: EdgeInsets.only(left: 18, top: 10),
+                margin: EdgeInsets.only(left: 20, top: 10),
                 width: screenWidth * 0.9,
                 height: screenHeight * 0.35,
                 decoration: BoxDecoration(
@@ -66,22 +68,34 @@ class _ChartPageState extends State<ChartPage> {
                 ),
               ),
               Container(
-                margin: EdgeInsets.only(left: 19),
+                margin: EdgeInsets.only(left: 20),
                 child: Row(
                   children: [
                     TileWidget(
                       name: 'Food',
+                      ic: Icon(
+                        Icons.dining,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
                     SizedBox(
-                      width: screenWidth * 0.07,
+                      width: screenWidth * 0.05,
                     ),
-                    TileWidget(name: 'Shopping'),
+                    TileWidget(
+                        name: 'Shopping',
+                        ic: Icon(
+                          Icons.shopping_bag,
+                          color: AppColors.secondaryColor,
+                        )),
                     SizedBox(
-                      width: screenWidth * 0.07,
+                      width: screenWidth * 0.05,
                     ),
-                    TileWidget(name: 'housing'),
-                    SizedBox(
-                      width: screenWidth * 0.07,
+                    TileWidget(
+                      name: 'Housing',
+                      ic: Icon(
+                        Icons.house_rounded,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
                   ],
                 ),
@@ -94,40 +108,66 @@ class _ChartPageState extends State<ChartPage> {
                 child: Row(
                   children: [
                     TileWidget(
-                      name: 'Food',
+                      name: 'Life',
+                      ic: Icon(
+                        Icons.health_and_safety_rounded,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
                     SizedBox(
-                      width: screenWidth * 0.07,
+                      width: screenWidth * 0.05,
                     ),
-                    TileWidget(name: 'Shopping'),
-                    SizedBox(
-                      width: screenWidth * 0.07,
+                    TileWidget(
+                      name: 'Investment',
+                      ic: Icon(
+                        Icons.monetization_on_rounded,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
-                    TileWidget(name: 'housing'),
                     SizedBox(
-                      width: screenWidth * 0.07,
+                      width: screenWidth * 0.05,
+                    ),
+                    TileWidget(
+                      name: 'Vehicle',
+                      ic: Icon(
+                        Icons.motorcycle_sharp,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
                   ],
                 ),
               ),
               SizedBox(height: screenHeight * 0.04),
               Container(
-                margin: EdgeInsets.only(left: 19),
+                margin: EdgeInsets.only(left: 20),
                 child: Row(
                   children: [
                     TileWidget(
-                      name: 'Food',
+                      name: 'Entertainment',
+                      ic: Icon(
+                        Icons.theater_comedy_rounded,
+                        color: AppColors.secondaryColor,
+                      ),
+                    ),
+                    SizedBox(
+                      width: screenWidth * 0.05,
+                    ),
+                    TileWidget(
+                      name: 'Groceries',
+                      ic: Icon(
+                        Icons.local_grocery_store_rounded,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
                     SizedBox(
                       width: screenWidth * 0.07,
                     ),
-                    TileWidget(name: 'Shopping'),
-                    SizedBox(
-                      width: screenWidth * 0.07,
-                    ),
-                    TileWidget(name: 'housing'),
-                    SizedBox(
-                      width: screenWidth * 0.07,
+                    TileWidget(
+                      name: 'Others',
+                      ic: Icon(
+                        Icons.device_unknown,
+                        color: AppColors.secondaryColor,
+                      ),
                     ),
                   ],
                 ),
