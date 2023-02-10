@@ -1,19 +1,23 @@
-import 'package:budget_tracker/services/database.dart';
-import 'package:budget_tracker/widgets/chart.dart';
-import 'package:budget_tracker/screens/login_options/login_opt.dart';
-import 'package:budget_tracker/services/auth_service.dart';
-import 'package:budget_tracker/widgets/colors.dart';
-import 'package:budget_tracker/widgets/custom_button.dart';
-import 'package:budget_tracker/widgets/expense_tile.dart';
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
 
+import 'package:budget_tracker/screens/charts_page.dart';
+import 'package:budget_tracker/screens/login_options/login_opt.dart';
+import 'package:budget_tracker/services/auth_service.dart';
+import 'package:budget_tracker/services/database.dart';
+import 'package:budget_tracker/widgets/chart.dart';
+import 'package:budget_tracker/widgets/colors.dart';
+import 'package:budget_tracker/widgets/custom_button.dart';
+import 'package:budget_tracker/widgets/expense_tile.dart';
+
 class HomePage extends StatefulWidget {
-  const HomePage({Key? key}) : super(key: key);
+  const HomePage({
+    Key? key,
+  }) : super(key: key);
 
   @override
   State<HomePage> createState() => _HomePageState();
@@ -29,42 +33,8 @@ const List<String> options = <String>[
   "Other",
 ];
 
-const List<Map<String, dynamic>> expenseData = [
-  {
-    'title': "Shopping",
-    'date': "6 January 2023",
-    'logo': "",
-    'money': 50,
-  },
-  {
-    'title': "Entertainment",
-    'date': "6 January 2023",
-    'logo': "",
-    'money': 50,
-  },
-  {
-    'title': "Transport",
-    'date': "6 January 2023",
-    'logo': "",
-    'money': 50,
-  },
-  {
-    'title': "Food & Drinks",
-    'date': "6 January 2023",
-    'logo': "",
-    'money': 50,
-  },
-  {
-    'title': "Bills",
-    'date': "6 January 2023",
-    'logo': "",
-    'money': 50,
-  },
-];
-
 class _HomePageState extends State<HomePage> {
   bool _isLoading = false;
-
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
   int _expense = 0;
@@ -75,10 +45,10 @@ class _HomePageState extends State<HomePage> {
   @override
   void initState() {
     // TODO: implement initState
-
-    super.initState();
     fetching();
     fetchUserExpenses();
+
+    super.initState();
   }
 
   fetchUserExpenses() async {
@@ -109,6 +79,10 @@ class _HomePageState extends State<HomePage> {
 
             print(data);
           });
+        } else {
+          _isLoading = false;
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Error occured")));
         }
       });
     } else {
@@ -122,6 +96,10 @@ class _HomePageState extends State<HomePage> {
 
             print(data);
           });
+        } else {
+          _isLoading = false;
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Error occured")));
         }
       });
     }
@@ -141,10 +119,79 @@ class _HomePageState extends State<HomePage> {
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        leading: Builder(builder: (BuildContext context) {
+          return IconButton(
+            icon: const Icon(Icons.settings),
+            onPressed: () {
+              Scaffold.of(context).openDrawer();
+            },
+            tooltip: MaterialLocalizations.of(context).openAppDrawerTooltip,
+          );
+        }),
         title: Text(
           "Budget Tracker",
         ),
         centerTitle: true,
+      ),
+      drawer: Drawer(
+        backgroundColor: AppColors.secondaryColor,
+        child: Drawer(
+          child: Padding(
+            padding: EdgeInsets.symmetric(vertical: 50),
+            child: ListView(
+              children: [
+                Icon(
+                  Icons.account_circle,
+                  size: 150,
+                  color: AppColors.secondaryColor,
+                ),
+                Center(
+                    child: Text(
+                  data!.docs[0]['username'],
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                )),
+                SizedBox(
+                  height: 30,
+                ),
+                Divider(
+                  height: 2,
+                ),
+                ListTile(
+                  onTap: () {},
+                  title: Text(
+                    'Change Income',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.monetization_on,
+                    color: AppColors.secondaryColor,
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                ),
+                ListTile(
+                  onTap: () {
+                    signOut(context);
+                  },
+                  title: Text(
+                    'Logout',
+                    style: TextStyle(
+                      fontSize: 18,
+                    ),
+                  ),
+                  leading: Icon(
+                    Icons.logout,
+                    color: AppColors.secondaryColor,
+                  ),
+                  contentPadding:
+                      EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                ),
+              ],
+            ),
+          ),
+        ),
       ),
       floatingActionButton: Container(
         width: 50,
@@ -164,42 +211,13 @@ class _HomePageState extends State<HomePage> {
           backgroundColor: AppColors.secondaryColor,
         ),
       ),
-      bottomNavigationBar: BottomNavigationBar(
-          unselectedItemColor: Colors.grey,
-          selectedItemColor: AppColors.secondaryColor,
-          unselectedLabelStyle: TextStyle(color: Colors.grey),
-          showUnselectedLabels: true,
-          items: [
-            BottomNavigationBarItem(
-              icon: Icon(
-                Icons.home,
-                size: 20,
-              ),
-              label: "Home",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.bar_chart, size: 20),
-              label: "Charts",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.check_box, size: 20),
-              label: "Goals",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month, size: 20),
-              label: "Bills",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.settings, size: 20),
-              label: "Settings",
-            ),
-          ]),
       backgroundColor: AppColors.primaryColor,
-      body: _isLoading
+      body: (_isLoading && data != null)
           ? Center(
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
+              physics: ScrollPhysics(),
               child: SafeArea(
                 child: Column(
                   children: [
@@ -225,13 +243,13 @@ class _HomePageState extends State<HomePage> {
                           child: Row(
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: [
-                              ChartWidget(
-                                isLegend: true,
-                                expenses: data!.docs[0]['totalExpense'],
-                                savings: data!.docs[0]['monthlyincome'] -
-                                    data!.docs[0]['totalExpense'],
-                                chartColor: [Colors.blue, Colors.yellow],
-                              ),
+                              // ChartWidget(
+                              //   isLegend: true,
+                              //   expenses: data!.docs[0]['totalExpense'],
+                              //   savings: data!.docs[0]['monthlyincome'] -
+                              //       data!.docs[0]['totalExpense'],
+                              //   chartColor: [Colors.blue, Colors.yellow],
+                              // ),
                             ],
                           ),
                         ),
@@ -449,7 +467,7 @@ addExpense(
   await Database(uid: FirebaseAuth.instance.currentUser!.uid)
       .addExpense(userid, expense, category)
       .then((value) {
-    if (value != null) {
+    if (value == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Expense added.")));
     } else {
