@@ -7,7 +7,6 @@ import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
-
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -201,6 +200,7 @@ class _HomePageState extends State<HomePage> {
               child: CircularProgressIndicator(),
             )
           : SingleChildScrollView(
+              physics: ScrollPhysics(),
               child: SafeArea(
                 child: Column(
                   children: [
@@ -395,6 +395,7 @@ class _HomePageState extends State<HomePage> {
           if (snapshot.hasData) {
             if (snapshot.data.docs.length != 0) {
               return ListView.builder(
+                  physics: NeverScrollableScrollPhysics(),
                   shrinkWrap: true,
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: ((context, index) {
@@ -450,7 +451,7 @@ addExpense(
   await Database(uid: FirebaseAuth.instance.currentUser!.uid)
       .addExpense(userid, expense, category)
       .then((value) {
-    if (value != null) {
+    if (value == null) {
       ScaffoldMessenger.of(context)
           .showSnackBar(SnackBar(content: Text("Expense added.")));
     } else {
