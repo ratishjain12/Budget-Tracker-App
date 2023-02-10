@@ -35,9 +35,6 @@ const List<String> options = <String>[
 
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
-  @override
-  bool get wantKeepAlive => true;
-
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
@@ -45,6 +42,9 @@ class _HomePageState extends State<HomePage>
   int _savings = 0;
   QuerySnapshot? data;
   Stream<QuerySnapshot>? expenseUsers;
+
+  @override
+  bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -119,6 +119,7 @@ class _HomePageState extends State<HomePage>
   String? opt;
   @override
   Widget build(BuildContext context) {
+    super.build(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return _isLoading
@@ -222,7 +223,6 @@ class _HomePageState extends State<HomePage>
             ),
             backgroundColor: AppColors.primaryColor,
             body: SingleChildScrollView(
-              physics: ScrollPhysics(),
               child: SafeArea(
                 child: Column(
                   children: [

@@ -180,7 +180,7 @@ class _SignInState extends State<SignIn> {
         if (value == true) {
           await helper_function.saveUserLoggedInStatus(true);
           Navigator.of(context)
-              .pushNamedAndRemoveUntil('/home', (route) => false);
+              .pushNamedAndRemoveUntil('/base', (route) => false);
         } else {
           setState(() {
             _isLoading = false;

@@ -172,7 +172,7 @@ class _QueState extends State<Que> {
                                       await helper_function
                                           .saveOnboardingStatus(true);
                                       Navigator.of(context)
-                                          .pushReplacementNamed('/home');
+                                          .pushReplacementNamed('/base');
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
@@ -327,7 +327,7 @@ class _QueState extends State<Que> {
                                                               Navigator.of(
                                                                       context)
                                                                   .pushReplacementNamed(
-                                                                      '/home');
+                                                                      '/base');
                                                             } else {
                                                               ScaffoldMessenger
                                                                       .of(
@@ -359,7 +359,7 @@ class _QueState extends State<Que> {
                                       await helper_function
                                           .saveOnboardingStatus(true);
                                       Navigator.of(context)
-                                          .pushReplacementNamed('/home');
+                                          .pushReplacementNamed('/base');
                                     } else {
                                       ScaffoldMessenger.of(context)
                                           .showSnackBar(SnackBar(
