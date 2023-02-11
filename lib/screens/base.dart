@@ -13,9 +13,9 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
-  final List<Widget> _pages = <Widget>[HomePage(), ChartPage()];
+  List<Widget> _pages = [HomePage(), ChartPage()];
   late PageController pageController;
-
+  int _selectedIndex = 0;
   // bool _isLoading = false;
 
   // QuerySnapshot? data;
@@ -45,10 +45,15 @@ class _BaseState extends State<Base> {
     });
   }
 
-  int _selectedIndex = 0;
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      body: PageView(
+        physics: NeverScrollableScrollPhysics(),
+        controller: pageController,
+        children: _pages,
+        onPageChanged: onPageChanged,
+      ),
       bottomNavigationBar: BottomNavigationBar(
           type: BottomNavigationBarType.fixed,
           unselectedItemColor: Colors.grey,
@@ -69,21 +74,15 @@ class _BaseState extends State<Base> {
               icon: Icon(Icons.bar_chart, size: 20),
               label: "Charts",
             ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.check_box, size: 20),
-              label: "Goals",
-            ),
-            BottomNavigationBarItem(
-              icon: Icon(Icons.calendar_month, size: 20),
-              label: "Bills",
-            ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.check_box, size: 20),
+            //   label: "Goals",
+            // ),
+            // BottomNavigationBarItem(
+            //   icon: Icon(Icons.calendar_month, size: 20),
+            //   label: "Bills",
+            // ),
           ]),
-      body: PageView(
-        physics: NeverScrollableScrollPhysics(),
-        controller: pageController,
-        children: _pages,
-        onPageChanged: onPageChanged,
-      ),
     );
   }
 }

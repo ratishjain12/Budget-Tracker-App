@@ -28,7 +28,6 @@ class _MyAppState extends State<MyApp> {
   bool _isSignedIn = false;
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     getUserSignedInStatus();
   }
@@ -51,9 +50,10 @@ class _MyAppState extends State<MyApp> {
         colorScheme:
             ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
       ),
-      home: _isSignedIn ? HomePage() : Login_opt(),
+      home: _isSignedIn ? const Base() : const Login_opt(),
       routes: {
         // '/graph': (context) => ChartWidget(),
+        '/base': (context) => Base(),
         '/login_opt': (context) => Login_opt(),
         '/signin': (context) => SignIn(),
         '/signup': (context) => SignUp(),

@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/base.dart';
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/questions.dart';
@@ -126,7 +127,7 @@ class _Login_optState extends State<Login_opt> {
                                         .saveUserLoggedInStatus(true);
                                     Navigator.of(context).pushReplacement(
                                         MaterialPageRoute(
-                                            builder: (context) => HomePage()));
+                                            builder: (context) => Base()));
                                   } else {
                                     _isLoading = false;
                                     Navigator.of(context).pushReplacement(
