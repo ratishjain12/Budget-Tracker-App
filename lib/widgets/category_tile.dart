@@ -25,10 +25,16 @@ class TileWidget extends StatelessWidget {
           boxShadow: [
             BoxShadow(
               color: Colors.grey,
-              offset: Offset(2, 2),
-              blurRadius: 2,
-              spreadRadius: 2,
+              offset: Offset(4, 4),
+              blurRadius: 15,
+              spreadRadius: 1,
             ),
+            BoxShadow(
+              color: Colors.white,
+              offset: Offset(-4, -4),
+              blurRadius: 15,
+              spreadRadius: 1,
+            )
           ],
         ),
         child: Center(

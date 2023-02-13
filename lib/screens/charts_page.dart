@@ -44,10 +44,17 @@ class _ChartPageState extends State<ChartPage> {
                   borderRadius: BorderRadius.circular(10),
                   boxShadow: [
                     BoxShadow(
-                        color: Colors.grey,
-                        offset: Offset(2, 2),
-                        blurRadius: 3,
-                        spreadRadius: 2)
+                      color: Colors.grey,
+                      offset: Offset(4, 4),
+                      blurRadius: 15,
+                      spreadRadius: 1,
+                    ),
+                    BoxShadow(
+                      color: Colors.white,
+                      offset: Offset(-4, -4),
+                      blurRadius: 15,
+                      spreadRadius: 1,
+                    )
                   ]),
               child: SfCircularChart(
                   tooltipBehavior: TooltipBehavior(enable: true),
