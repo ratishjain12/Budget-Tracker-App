@@ -22,6 +22,7 @@ class _SignInState extends State<SignIn> {
   AuthService authService = AuthService();
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
+  bool _isObscured = true;
   @override
   Widget build(BuildContext context) {
     var screenWidth = MediaQuery.of(context).size.width;
@@ -117,11 +118,21 @@ class _SignInState extends State<SignIn> {
                                 return null;
                               },
                               controller: _password,
-                              obscureText: true,
+                              obscureText: _isObscured,
                               decoration: InputDecoration(
                                 prefixIcon: Icon(
                                   Icons.lock,
                                   color: Colors.grey,
+                                ),
+                                suffixIcon: IconButton(
+                                  icon: Icon(_isObscured
+                                      ? Icons.visibility
+                                      : Icons.visibility_off),
+                                  onPressed: () {
+                                    setState(() {
+                                      _isObscured = !_isObscured;
+                                    });
+                                  },
                                 ),
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18),
