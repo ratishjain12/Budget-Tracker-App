@@ -1,6 +1,7 @@
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -179,6 +180,8 @@ class _SignInState extends State<SignIn> {
           .then((value) async {
         if (value == true) {
           await helper_function.saveUserLoggedInStatus(true);
+          await helper_function
+              .saveUserUid(FirebaseAuth.instance.currentUser!.uid);
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/base', (route) => false);
         } else {

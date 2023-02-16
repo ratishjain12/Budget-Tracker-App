@@ -12,7 +12,7 @@ import 'package:budget_tracker/widgets/colors.dart';
 import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 
-void main() async {
+Future<void> main() async {
   WidgetsFlutterBinding.ensureInitialized();
   await Firebase.initializeApp();
   runApp(MyApp());
@@ -29,8 +29,8 @@ class _MyAppState extends State<MyApp> {
   bool _isSignedIn = false;
   @override
   void initState() {
-    super.initState();
     getUserSignedInStatus();
+    super.initState();
   }
 
   getUserSignedInStatus() async {

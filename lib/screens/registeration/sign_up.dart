@@ -1,4 +1,6 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/services/auth_service.dart';
+import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/src/foundation/key.dart';
 import 'package:flutter/src/widgets/framework.dart';
@@ -182,6 +184,9 @@ class _SignUpState extends State<SignUp> {
               _email.text, _password.text, _username.text, context)
           .then((value) async {
         if (value == true) {
+          await helper_function.saveUserLoggedInStatus(true);
+          await helper_function
+              .saveUserUid(FirebaseAuth.instance.currentUser!.uid);
           Navigator.of(context)
               .pushNamedAndRemoveUntil('/questions', (route) => false);
         } else {

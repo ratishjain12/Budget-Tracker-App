@@ -63,7 +63,10 @@ class AuthService {
       try {
         UserCredential result = await auth.signInWithCredential(credential);
         User? user = result.user;
+
         if (user != null) {
+          await helper_function.saveUserUid(user.uid);
+
           if (result.additionalUserInfo!.isNewUser) {
             await FirebaseFirestore.instance
                 .collection("users")
@@ -90,5 +93,8 @@ class AuthService {
       print(e);
     }
     await helper_function.saveUserLoggedInStatus(false);
+    await helper_function.saveUserUid("");
+    await helper_function.saveUserEmail("");
+    await helper_function.saveUserName("");
   }
 }

@@ -38,6 +38,16 @@ class Database {
     });
   }
 
+  Future fetchUserEmail(String userid) async {
+    DocumentSnapshot s = await userCollection.doc(userid).get();
+    return s['email'];
+  }
+
+  Future fetchUsername(String userid) async {
+    DocumentSnapshot s = await userCollection.doc(userid).get();
+    return s['username'];
+  }
+
   Future userDetailCustomSaving(
       int monthly, String savingmode, int amountSave) async {
     return await userCollection.doc(uid).update({
@@ -49,9 +59,7 @@ class Database {
   }
 
   Future fetchUserDetails(String? email) async {
-    QuerySnapshot s =
-        await userCollection.where("email", isEqualTo: email).get();
-    return s;
+    return await userCollection.where("email", isEqualTo: email).get();
   }
 
   Future fetchUserDetailsUser(String? username) async {
@@ -66,5 +74,77 @@ class Database {
         .collection('expense')
         .limit(4)
         .snapshots();
+  }
+
+  Future foodCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Food & Drinks')
+        .get();
+    return s;
+  }
+
+  Future shoppingCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Shopping')
+        .get();
+    return s;
+  }
+
+  Future housingCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Housing')
+        .get();
+    return s;
+  }
+
+  Future lifehealthCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Life & Health')
+        .get();
+    return s;
+  }
+
+  Future investmentCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Investments')
+        .get();
+    return s;
+  }
+
+  Future vehicleCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Vehicle & Transportation')
+        .get();
+    return s;
+  }
+
+  Future otherCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Other')
+        .get();
+    return s;
+  }
+
+  Future entertainCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Entertaiment')
+        .get();
+    return s;
   }
 }
