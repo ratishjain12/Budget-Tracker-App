@@ -1,5 +1,7 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_core/firebase_core.dart';
 import 'package:flutter/material.dart';
 import 'package:fluttertoast/fluttertoast.dart';
 import 'package:intl/intl.dart';
@@ -39,8 +41,14 @@ class _HomePageState extends State<HomePage>
   final _expenseController = TextEditingController();
   int _expense = 0;
   int _savings = 0;
+  String username = "1";
   QuerySnapshot? data;
+  int totalExpense = 0;
+  int monthlyIncome = 0;
   Stream<QuerySnapshot>? expenseUsers;
+
+  String userid = "1";
+  String email = "1";
 
   @override
   bool get wantKeepAlive => true;
@@ -48,69 +56,118 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     // TODO: implement initState
+    getUserDetails();
     fetching();
     fetchUserExpenses();
 
     super.initState();
   }
 
-  fetchUserExpenses() async {
-    await Database(uid: FirebaseAuth.instance.currentUser!.uid)
-        .fetchUserExpenses(FirebaseAuth.instance.currentUser!.uid)
-        .then((value) {
+  Future getUserDetails() async {
+    await helper_function.getUserUid().then((value) {
       if (value != null) {
         setState(() {
-          expenseUsers = value;
-          print(expenseUsers);
+          userid = value;
+          print("userid" + userid);
         });
       }
     });
   }
 
-  fetching() async {
+  Future fetchUserExpenses() async {
+    await getUserDetails().whenComplete(() async {
+      await Database(uid: userid).fetchUserExpenses(userid).then((value) {
+        if (value != null) {
+          setState(() {
+            expenseUsers = value;
+          });
+        }
+      });
+    });
+  }
+
+  Future fetching() async {
     setState(() {
       _isLoading = true;
     });
-    if (FirebaseAuth.instance.currentUser!.email != null) {
-      await Database()
-          .fetchUserDetails(FirebaseAuth.instance.currentUser!.email)
-          .then((value) {
+
+    await getUserDetails().whenComplete(() async {
+      await Database(uid: userid).fetchUserEmail(userid).then((value) {
         if (value != null) {
           setState(() {
-            _isLoading = false;
-            data = value;
-
-            print(data);
+            email = value;
+            print("email" + email);
           });
         } else {
-          _isLoading = false;
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Error occured")));
+          setState(() {
+            email = "";
+          });
         }
       });
-    } else {
-      await Database()
-          .fetchUserDetailsUser(FirebaseAuth.instance.currentUser!.displayName)
-          .then((value) {
+
+      await Database(uid: userid).fetchUsername(userid).then((value) {
         if (value != null) {
           setState(() {
-            _isLoading = false;
-            data = value;
-
-            print(data);
+            username = value;
+            print("username" + username);
           });
         } else {
-          _isLoading = false;
-          ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Error occured")));
+          setState(() {
+            username = "";
+          });
         }
       });
-    }
+
+      if (email != "") {
+        await Database(uid: userid).fetchUserDetails(email).then((value) {
+          if (value != null) {
+            setState(() {
+              _isLoading = false;
+              data = value;
+              username = data!.docs[0]['username'];
+              totalExpense = data!.docs[0]['totalExpense'];
+              monthlyIncome = data!.docs[0]['monthlyincome'];
+            });
+          } else {
+            setState(() {
+              _isLoading = false;
+              data = null;
+            });
+
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Error occured")));
+          }
+        });
+      } else if (username != "") {
+        await Database(uid: userid)
+            .fetchUserDetailsUser(username)
+            .then((value) {
+          if (value != null) {
+            setState(() {
+              _isLoading = false;
+              data = value;
+              username = data!.docs[0]['username'];
+              totalExpense = data!.docs[0]['totalExpense'];
+              monthlyIncome = data!.docs[0]['monthlyincome'];
+            });
+          } else {
+            setState(() {
+              _isLoading = false;
+              data = null;
+            });
+
+            ScaffoldMessenger.of(context)
+                .showSnackBar(SnackBar(content: Text("Error occured")));
+          }
+        });
+      }
+    });
   }
 
   @override
   void dispose() {
     // TODO: implement dispose
+
     _expenseController.dispose();
     super.dispose();
   }
@@ -118,7 +175,6 @@ class _HomePageState extends State<HomePage>
   String? opt;
   @override
   Widget build(BuildContext context) {
-    super.build(context);
     var screenWidth = MediaQuery.of(context).size.width;
     var screenHeight = MediaQuery.of(context).size.height;
     return _isLoading
@@ -156,7 +212,7 @@ class _HomePageState extends State<HomePage>
                       ),
                       Center(
                           child: Text(
-                        data!.docs[0]["username"],
+                        username,
                         style: TextStyle(fontWeight: FontWeight.bold),
                       )),
                       SizedBox(
@@ -249,9 +305,8 @@ class _HomePageState extends State<HomePage>
                             children: [
                               ChartWidget(
                                 isLegend: true,
-                                expenses: data!.docs[0]['totalExpense'],
-                                savings: data!.docs[0]['monthlyincome'] -
-                                    data!.docs[0]['totalExpense'],
+                                expenses: totalExpense,
+                                savings: monthlyIncome - totalExpense,
                                 chartColor: [Colors.blue, Colors.yellow],
                               ),
                             ],
@@ -391,11 +446,8 @@ class _HomePageState extends State<HomePage>
                                   return;
                                 }
 
-                                await addExpense(
-                                    context,
-                                    FirebaseAuth.instance.currentUser!.uid,
-                                    int.parse(_expenseController.text),
-                                    opt!);
+                                await addExpense(context, userid,
+                                    int.parse(_expenseController.text), opt!);
                                 Navigator.of(context).pop(fetching());
                               }
                             }),
@@ -464,26 +516,26 @@ class _HomePageState extends State<HomePage>
           }
         });
   }
-}
 
-addExpense(
-    BuildContext context, String userid, int expense, String category) async {
-  await Database(uid: FirebaseAuth.instance.currentUser!.uid)
-      .addExpense(userid, expense, category)
-      .then((value) {
-    if (value == null) {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Expense added.")));
-    } else {
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("Expense addition failed.")));
-    }
-  });
-}
+  addExpense(
+      BuildContext context, String userid, int expense, String category) async {
+    await Database(uid: userid)
+        .addExpense(userid, expense, category)
+        .then((value) {
+      if (value == null) {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Expense added.")));
+      } else {
+        ScaffoldMessenger.of(context)
+            .showSnackBar(SnackBar(content: Text("Expense addition failed.")));
+      }
+    });
+  }
 
-signOut(BuildContext context) async {
-  await AuthService().signOut().whenComplete(() {
-    Navigator.of(context)
-        .pushReplacement(MaterialPageRoute(builder: (context) => Login_opt()));
-  });
+  signOut(BuildContext context) async {
+    await AuthService().signOut().whenComplete(() {
+      Navigator.of(context).pushReplacement(
+          MaterialPageRoute(builder: (context) => Login_opt()));
+    });
+  }
 }

@@ -28,7 +28,7 @@ class _ExpenseTileState extends State<ExpenseTile> {
       margin: EdgeInsets.all(screenHeight * 0.012),
       padding: EdgeInsets.all(8),
       width: double.infinity,
-      height: 60,
+      height: 67,
       decoration: BoxDecoration(
         color: Colors.white,
         borderRadius: BorderRadius.circular(12),
