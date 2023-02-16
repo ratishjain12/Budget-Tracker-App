@@ -1,4 +1,5 @@
 import 'package:budget_tracker/screens/charts_page.dart';
+import 'package:budget_tracker/screens/goal_page.dart';
 import 'package:budget_tracker/screens/home_page.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 
@@ -14,7 +15,11 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
+<<<<<<< HEAD
   final List<Widget> _pages = [HomePage(), ChartPage()];
+=======
+  List<Widget> _pages = [HomePage(), ChartPage(), GoalPage()];
+>>>>>>> origin/main
   late PageController pageController;
   int _selectedIndex = 0;
   // bool _isLoading = false;
@@ -75,10 +80,10 @@ class _BaseState extends State<Base> {
               icon: Icon(Icons.bar_chart, size: 20),
               label: "Charts",
             ),
-            // BottomNavigationBarItem(
-            //   icon: Icon(Icons.check_box, size: 20),
-            //   label: "Goals",
-            // ),
+            BottomNavigationBarItem(
+              icon: Icon(Icons.check_box, size: 20),
+              label: "Goals",
+            ),
             // BottomNavigationBarItem(
             //   icon: Icon(Icons.calendar_month, size: 20),
             //   label: "Bills",

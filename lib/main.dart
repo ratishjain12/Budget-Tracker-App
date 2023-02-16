@@ -1,4 +1,5 @@
 import 'package:budget_tracker/screens/base.dart';
+import 'package:budget_tracker/screens/goal_page.dart';
 import 'package:budget_tracker/screens/registeration/forgot_pwd.dart';
 
 import 'package:budget_tracker/screens/helper/helper_function.dart';
