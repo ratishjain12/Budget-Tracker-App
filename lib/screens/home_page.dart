@@ -31,6 +31,7 @@ const List<String> options = <String>[
   "Investments",
   "Vehicle & Transportation",
   "Entertainment",
+  "Groceries",
   "Other",
 ];
 

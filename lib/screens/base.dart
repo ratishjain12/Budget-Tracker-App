@@ -15,11 +15,7 @@ class Base extends StatefulWidget {
 }
 
 class _BaseState extends State<Base> {
-<<<<<<< HEAD
-  final List<Widget> _pages = [HomePage(), ChartPage()];
-=======
   List<Widget> _pages = [HomePage(), ChartPage(), GoalPage()];
->>>>>>> origin/main
   late PageController pageController;
   int _selectedIndex = 0;
   // bool _isLoading = false;
