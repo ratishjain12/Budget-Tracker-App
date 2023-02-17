@@ -431,7 +431,7 @@ class _ChartPageState extends State<ChartPage> {
                               Navigator.of(context).push(MaterialPageRoute(
                                   builder: (context) => Category(
                                         userId: userid,
-                                        CategoryTitle: "Others",
+                                        CategoryTitle: "Other",
                                       )));
                             },
                             name: 'Others',
