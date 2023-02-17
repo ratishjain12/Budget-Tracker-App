@@ -1,3 +1,4 @@
+import 'package:budget_tracker/screens/category.dart';
 import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/widgets/category_tile.dart';
 import 'package:budget_tracker/widgets/colors.dart';
@@ -37,6 +38,7 @@ class _ChartPageState extends State<ChartPage> {
   num totalVehicle = 0;
   num totalOthers = 0;
   num totalEntertainment = 0;
+  num totalGroceries = 0;
 
   @override
   void initState() {
@@ -121,6 +123,13 @@ class _ChartPageState extends State<ChartPage> {
           });
         }
       });
+      await Database(uid: userid).groceriesCategory(userid).then((value) {
+        if (value != null) {
+          setState(() {
+            groceries = value;
+          });
+        }
+      });
     });
   }
 
@@ -152,6 +161,13 @@ class _ChartPageState extends State<ChartPage> {
         for (int i = 0; i < lifeHealth!.docs.length; i++) {
           setState(() {
             totalLifeHealth += lifeHealth!.docs[i]['amount'];
+          });
+        }
+      }
+      if (groceries != null) {
+        for (int i = 0; i < groceries!.docs.length; i++) {
+          setState(() {
+            totalGroceries += groceries!.docs[i]['amount'];
           });
         }
       }
@@ -208,6 +224,7 @@ class _ChartPageState extends State<ChartPage> {
       ChartData('Investment', totalInvestment),
       ChartData('Vehicle', totalVehicle),
       ChartData('Entertainment', totalEntertainment),
+      ChartData('Groceries', totalGroceries),
       ChartData('Others', totalOthers),
     ];
 
@@ -262,6 +279,13 @@ class _ChartPageState extends State<ChartPage> {
                       child: Row(
                         children: [
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        CategoryTitle: "Food & Drinks",
+                                        userId: userid,
+                                      )));
+                            },
                             name: 'Food',
                             ic: Icon(
                               Icons.dining,
@@ -272,6 +296,13 @@ class _ChartPageState extends State<ChartPage> {
                             width: screenWidth * 0.05,
                           ),
                           TileWidget(
+                              onTap: () {
+                                Navigator.of(context).push(MaterialPageRoute(
+                                    builder: (context) => Category(
+                                          userId: userid,
+                                          CategoryTitle: "Shopping",
+                                        )));
+                              },
                               name: 'Shopping',
                               ic: Icon(
                                 Icons.shopping_bag,
@@ -281,6 +312,13 @@ class _ChartPageState extends State<ChartPage> {
                             width: screenWidth * 0.05,
                           ),
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle: "Housing",
+                                      )));
+                            },
                             name: 'Housing',
                             ic: Icon(
                               Icons.house_rounded,
@@ -294,10 +332,17 @@ class _ChartPageState extends State<ChartPage> {
                       height: screenHeight * 0.04,
                     ),
                     Container(
-                      margin: EdgeInsets.only(left: 19),
+                      margin: EdgeInsets.only(left: 20),
                       child: Row(
                         children: [
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle: "Life & Health",
+                                      )));
+                            },
                             name: 'Life',
                             ic: Icon(
                               Icons.health_and_safety_rounded,
@@ -308,6 +353,13 @@ class _ChartPageState extends State<ChartPage> {
                             width: screenWidth * 0.05,
                           ),
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle: "Investments",
+                                      )));
+                            },
                             name: 'Investment',
                             ic: Icon(
                               Icons.monetization_on_rounded,
@@ -318,6 +370,14 @@ class _ChartPageState extends State<ChartPage> {
                             width: screenWidth * 0.05,
                           ),
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle:
+                                            "Vehicle & Transportation",
+                                      )));
+                            },
                             name: 'Vehicle',
                             ic: Icon(
                               Icons.motorcycle_sharp,
@@ -333,6 +393,13 @@ class _ChartPageState extends State<ChartPage> {
                       child: Row(
                         children: [
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle: "Entertainment",
+                                      )));
+                            },
                             name: 'Entertainment',
                             ic: Icon(
                               Icons.theater_comedy_rounded,
@@ -343,6 +410,13 @@ class _ChartPageState extends State<ChartPage> {
                             width: screenWidth * 0.05,
                           ),
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle: "Groceries",
+                                      )));
+                            },
                             name: 'Groceries',
                             ic: Icon(
                               Icons.local_grocery_store_rounded,
@@ -353,6 +427,13 @@ class _ChartPageState extends State<ChartPage> {
                             width: screenWidth * 0.07,
                           ),
                           TileWidget(
+                            onTap: () {
+                              Navigator.of(context).push(MaterialPageRoute(
+                                  builder: (context) => Category(
+                                        userId: userid,
+                                        CategoryTitle: "Others",
+                                      )));
+                            },
                             name: 'Others',
                             ic: Icon(
                               Icons.device_unknown,
