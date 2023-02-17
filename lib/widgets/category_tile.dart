@@ -3,19 +3,17 @@ import 'package:flutter/material.dart';
 class TileWidget extends StatelessWidget {
   String name;
   final Icon ic;
-  // Function()? onTap;
-  TileWidget({
-    Key? key,
-    required this.name,
-    required this.ic, //required this.onTap
-  }) : super(key: key);
+  Function()? onTap;
+  TileWidget(
+      {Key? key, required this.name, required this.ic, required this.onTap})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     return GestureDetector(
-      onTap: () {},
+      onTap: onTap,
       child: Container(
         height: screenHeight * 0.07,
         width: screenWidth * 0.25,

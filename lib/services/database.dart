@@ -71,7 +71,8 @@ class Database {
     return await userCollection
         .doc(userid)
         .collection('expense')
-        .limit(4)
+        .orderBy("Date")
+        .limitToLast(4)
         .snapshots();
   }
 
@@ -129,6 +130,15 @@ class Database {
     return s;
   }
 
+  Future groceriesCategory(String userid) async {
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: 'Groceries')
+        .get();
+    return s;
+  }
+
   Future otherCategory(String userid) async {
     QuerySnapshot s = await userCollection
         .doc(userid)
@@ -145,5 +155,13 @@ class Database {
         .where('category', isEqualTo: 'Entertaiment')
         .get();
     return s;
+  }
+
+  Future CategoricExpenses(String userid, String category) async {
+    return await userCollection
+        .doc(userid)
+        .collection('expense')
+        .where('category', isEqualTo: category)
+        .snapshots();
   }
 }
