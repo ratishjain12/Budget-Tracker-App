@@ -238,6 +238,29 @@ class _HomePageState extends State<HomePage>
                             EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       ),
                       ListTile(
+                        onTap: () async {
+                          await Database(uid: userid)
+                              .clearExpenses(userid)
+                              .then((value) {
+                            if (value == null) {
+                              fetching();
+                            }
+                          });
+                        },
+                        title: Text(
+                          'Reset expenses',
+                          style: TextStyle(
+                            fontSize: 18,
+                          ),
+                        ),
+                        leading: Icon(
+                          Icons.delete,
+                          color: AppColors.secondaryColor,
+                        ),
+                        contentPadding:
+                            EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      ),
+                      ListTile(
                         onTap: () {
                           signOut(context);
                         },
