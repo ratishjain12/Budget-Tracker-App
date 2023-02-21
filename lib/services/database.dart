@@ -171,4 +171,14 @@ class Database {
         .where('category', isEqualTo: category)
         .snapshots();
   }
+
+  Future clearExpenses(String userid) async {
+    var s = await userCollection.doc(userid).collection('expense').get();
+    for (var doc in s.docs) {
+      await doc.reference.delete();
+    }
+    return await userCollection.doc(userid).update({
+      'totalExpense': 0,
+    });
+  }
 }
