@@ -58,12 +58,12 @@ class _CategoryState extends State<Category> {
                   shrinkWrap: true,
                   itemCount: snapshot.data.docs.length,
                   itemBuilder: (context, index) {
-                    int reverseIndex = snapshot.data.docs.length - index - 1;
                     return ExpenseTile(
-                      title: snapshot.data.docs[reverseIndex]['category'],
-                      money: snapshot.data.docs[reverseIndex]['amount'],
-                      date: DateFormat.yMMMd().add_jm().format(
-                          snapshot.data.docs[reverseIndex]['Date'].toDate()),
+                      title: snapshot.data.docs[index]['category'],
+                      money: snapshot.data.docs[index]['amount'],
+                      date: DateFormat.yMMMd()
+                          .add_jm()
+                          .format(snapshot.data.docs[index]['Date'].toDate()),
                     );
                   });
             } else {
