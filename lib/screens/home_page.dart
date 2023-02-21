@@ -40,8 +40,7 @@ class _HomePageState extends State<HomePage>
   bool _isLoading = false;
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
-  int _expense = 0;
-  int _savings = 0;
+
   String username = "1";
   QuerySnapshot? data;
   int totalExpense = 0;
@@ -470,9 +469,15 @@ class _HomePageState extends State<HomePage>
                                   return;
                                 }
 
-                                await addExpense(context, userid,
+                                bool res = await addExpense(context, userid,
                                     int.parse(_expenseController.text), opt!);
-                                Navigator.of(context).pop(fetching());
+
+                                print(res);
+                                if (res) {
+                                  Navigator.of(context).pop(fetching());
+                                } else {
+                                  Navigator.of(context).pop();
+                                }
                               }
                             }),
                       ],
@@ -541,19 +546,27 @@ class _HomePageState extends State<HomePage>
         });
   }
 
-  addExpense(
+  Future<bool> addExpense(
       BuildContext context, String userid, int expense, String category) async {
-    await Database(uid: userid)
-        .addExpense(userid, expense, category)
-        .then((value) {
-      if (value == null) {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Expense added.")));
-      } else {
-        ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Expense addition failed.")));
-      }
-    });
+    int savings = monthlyIncome - totalExpense;
+    if (expense > savings) {
+      ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text("expenses cannot be greater than savings!!")));
+      return false;
+    } else if (expense <= monthlyIncome) {
+      await Database(uid: userid)
+          .addExpense(userid, expense, category)
+          .then((value) {
+        if (value == null) {
+          ScaffoldMessenger.of(context)
+              .showSnackBar(SnackBar(content: Text("Expense added.")));
+        } else {
+          ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text("Expense addition failed.")));
+        }
+      });
+    }
+    return true;
   }
 
   signOut(BuildContext context) async {
