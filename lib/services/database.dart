@@ -37,6 +37,13 @@ class Database {
     });
   }
 
+  Future addGoal(String userid, String name, int goal_amount, int saved) async {
+    await userCollection.doc(userid).collection('goal').add({
+      'title': name,
+      ''
+    });
+  }
+
   Future fetchUserEmail(String userid) async {
     DocumentSnapshot s = await userCollection.doc(userid).get();
     return s['email'];

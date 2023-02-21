@@ -178,9 +178,7 @@ class _GoalPageState extends State<GoalPage>
                           height: screenHeight * 0.02,
                         ),
                         CustomButton(
-                            child: Text("Submit"), onPressed: () async {
-                              
-                            })
+                            child: Text("Submit"), onPressed: () async {})
                       ],
                     ),
                   ),
