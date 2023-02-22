@@ -79,7 +79,7 @@ class Database {
     return await userCollection
         .doc(userid)
         .collection('expense')
-        .orderBy("Date")
+        .orderBy("Date", descending: true)
         .limitToLast(4)
         .snapshots();
   }
