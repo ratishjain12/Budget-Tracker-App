@@ -1,6 +1,8 @@
+import 'package:budget_tracker/services/database.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
+import 'package:fluttertoast/fluttertoast.dart';
 import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class GoalPage extends StatefulWidget {
@@ -10,22 +12,28 @@ class GoalPage extends StatefulWidget {
   State<GoalPage> createState() => _GoalPageState();
 }
 
-class _GoalPageState extends State<GoalPage>
-    with AutomaticKeepAliveClientMixin {
+class _GoalPageState extends State<GoalPage> with AutomaticKeepAliveClientMixin {
   final _formKey = GlobalKey<FormState>();
   final _goalnameController = TextEditingController();
   final _goalController = TextEditingController();
+  bool _isalive = false;
 
   @override
   bool get wantKeepAlive => true;
   @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+  }
+  Future fetching(){
+    return 
+  }
   void dispose() {
-    // TODO: implement dispose
     _goalnameController.dispose();
     _goalController.dispose();
     super.dispose();
   }
-
+  
   @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
@@ -108,6 +116,7 @@ class _GoalPageState extends State<GoalPage>
   }
 
   popupDialog(BuildContext context) {
+    final _goalController = TextEditingController();
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
     return showDialog(
@@ -128,11 +137,11 @@ class _GoalPageState extends State<GoalPage>
                       mainAxisSize: MainAxisSize.min,
                       children: [
                         TextFormField(
-                          controller: _goalnameController,
+                          // controller: _goalnameController,
                           keyboardType: TextInputType.text,
                           validator: (val) {
                             if (val == null || val.isEmpty) {
-                              return "Please enter value";
+                              return "Please enter goal title";
                             }
                             return null;
                           },
@@ -157,7 +166,7 @@ class _GoalPageState extends State<GoalPage>
                           keyboardType: TextInputType.number,
                           validator: (value) {
                             if (value == null || value.isEmpty) {
-                              return "Please Enter Value";
+                              return "Please Enter Amount";
                             }
                             return null;
                           },
@@ -178,7 +187,12 @@ class _GoalPageState extends State<GoalPage>
                           height: screenHeight * 0.02,
                         ),
                         CustomButton(
-                            child: Text("Submit"), onPressed: () async {})
+                            child: Text("Submit"),
+                            onPressed: () async {
+                              await addGoal(context,userid,name,int.parse()){
+
+                              }
+                            })
                       ],
                     ),
                   ),
@@ -188,4 +202,13 @@ class _GoalPageState extends State<GoalPage>
           }));
         });
   }
+}
+addGoal(BuildContext context, String userid, String name,int goal_amount, int saved)async{
+  await Database(uid: userid).addGoal(userid, name, goal_amount, saved).then((value) {
+    if (value == null) {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Goals added successfully')));
+    } else {
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(content: Text('Goals addition failed')));
+    }
+  });
 }

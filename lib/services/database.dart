@@ -40,7 +40,8 @@ class Database {
   Future addGoal(String userid, String name, int goal_amount, int saved) async {
     await userCollection.doc(userid).collection('goal').add({
       'title': name,
-      ''
+      'goal': goal_amount,
+      'saved': saved,
     });
   }
 
@@ -81,6 +82,10 @@ class Database {
         .orderBy("Date")
         .limitToLast(4)
         .snapshots();
+  }
+
+  Future fetchGoals(String userid) async {
+    return await userCollection.doc(userid).collection('goal').snapshots();
   }
 
   Future foodCategory(String userid) async {
