@@ -38,7 +38,7 @@ class Database {
   }
 
   Future addGoal(String userid, String name, int goal_amount, int saved) async {
-    await userCollection.doc(userid).collection('goal').add({
+    return await userCollection.doc(userid).collection('goal').add({
       'title': name,
       'goal': goal_amount,
       'saved': saved,
