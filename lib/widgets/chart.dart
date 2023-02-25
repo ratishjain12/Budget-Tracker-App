@@ -5,14 +5,12 @@ class ChartWidget extends StatefulWidget {
   final bool isLegend;
   final int expenses;
   final int savings;
-  // final List<ExpenseData> data;
   final List<Color> chartColor;
   const ChartWidget(
       {Key? key,
       required this.isLegend,
       this.expenses = 0,
       this.savings = 0,
-      // required this.data,
       required this.chartColor})
       : super(key: key);
 
@@ -36,10 +34,6 @@ class _ChartWidgetState extends State<ChartWidget> {
     List<ChartData> data = [
       ChartData(name: 'Expenses', expense: widget.expenses),
       ChartData(name: 'Savings', expense: widget.savings),
-      // ChartData(name: 'Entertainment', expense: 1000),
-      // ChartData(name: 'Bills', expense: 3300),
-      // ChartData(name: 'Investment', expense: 2500),
-      // ChartData(name: 'Others', expense: 1500),
     ];
     return data;
   }
@@ -58,7 +52,9 @@ class _ChartWidgetState extends State<ChartWidget> {
           xValueMapper: (ChartData data, _) => data.name,
           yValueMapper: (ChartData data, _) => data.expense,
           dataLabelSettings: DataLabelSettings(
-              isVisible: true, overflowMode: OverflowMode.shift),
+              isVisible: true,
+              overflowMode: OverflowMode.shift,
+              labelAlignment: ChartDataLabelAlignment.outer),
           enableTooltip: true,
         ),
       ],
@@ -76,27 +72,3 @@ class ChartData {
   num? expense;
   ChartData({required this.name, required this.expense});
 }
-
-// class ExpenseChart extends StatefulWidget {
-//   const ExpenseChart({Key? key}) : super(key: key);
-
-//   @override
-//   State<ExpenseChart> createState() => _ExpenseChartState();
-// }
-
-// class _ExpenseChartState extends State<ExpenseChart> {
-//   @override
-//   Widget build(BuildContext context) {
-//     return SfCartesianChart();
-//   }
-// }
-
-// List<ExpenseData> getExpenseData(){
-
-// }
-
-// class ExpenseData {
-//   String? name;
-//   int? expense;
-//   ExpenseData({required name, required expense});
-// }

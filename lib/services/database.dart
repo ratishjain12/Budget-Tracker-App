@@ -3,7 +3,6 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 class Database {
   final String? uid;
   Database({this.uid});
-
   final CollectionReference userCollection =
       FirebaseFirestore.instance.collection("users");
 
@@ -35,6 +34,14 @@ class Database {
       'monthlyincome': monthly,
       'savingmode': savingmode,
       'totalExpense': 0,
+    });
+  }
+
+  Future addGoal(String userid, String name, int goal_amount, int saved) async {
+    return await userCollection.doc(userid).collection('goal').add({
+      'title': name,
+      'goal': goal_amount,
+      'saved': saved,
     });
   }
 
@@ -75,6 +82,10 @@ class Database {
         .orderBy("Date", descending: true)
         .limitToLast(4)
         .snapshots();
+  }
+
+  Future fetchGoals(String userid) async {
+    return await userCollection.doc(userid).collection('goal').snapshots();
   }
 
   Future foodCategory(String userid) async {
