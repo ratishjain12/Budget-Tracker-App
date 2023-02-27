@@ -92,8 +92,11 @@ class GoalWidget extends StatelessWidget {
                   height: screenHeight * 0.03,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(width: screenWidth * 0.65),
+                    SizedBox(
+                      width: screenWidth * 0.50,
+                    ),
                     Text("$Saved / $Goal", textAlign: TextAlign.end),
                   ],
                 ),

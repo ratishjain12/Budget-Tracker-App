@@ -177,6 +177,15 @@ class Database {
         .snapshots();
   }
 
+  Future delGoals(String userid, String GoalName, int GoalAmount) async {
+    var s = await userCollection.doc(userid).collection('goal').get();
+    for (var doc in s.docs) {
+      if (doc['title'] == GoalName && doc['goal'] == GoalAmount) {
+        await doc.reference.delete();
+      }
+    }
+  }
+
   Future clearExpenses(String userid) async {
     var s = await userCollection.doc(userid).collection('expense').get();
     for (var doc in s.docs) {
@@ -184,6 +193,12 @@ class Database {
     }
     return await userCollection.doc(userid).update({
       'totalExpense': 0,
+    });
+  }
+
+  Future updateSavings(String userid, int savings) async {
+    return await userCollection.doc(userid).update({
+      'monthlyincome': savings,
     });
   }
 }

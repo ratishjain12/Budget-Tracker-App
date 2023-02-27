@@ -47,6 +47,15 @@ class _GoalPageState extends State<GoalPage>
     });
   }
 
+  Future DeleteGoal(int GoalAmount, String GoalName) async {
+    await Database(uid: userid).delGoals(userid, GoalName, GoalAmount);
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+      backgroundColor: Colors.green,
+      content: Text(GoalName + " Goal completed"),
+    ));
+    print("delete function executed");
+  }
+
   Future fetchUserGoals() async {
     await getUserDetails().whenComplete(() async {
       await Database(uid: userid).fetchGoals(userid).then((value) {
@@ -59,9 +68,6 @@ class _GoalPageState extends State<GoalPage>
     });
   }
 
-  // Future fetching(){
-  //   return
-  // }
   void dispose() {
     _savingController.dispose();
     _goalnameController.dispose();
@@ -80,9 +86,15 @@ class _GoalPageState extends State<GoalPage>
             if (snapshot.hasData) {
               if (snapshot.data.docs.length != 0) {
                 return ListView.builder(
+                    physics: NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
                     itemCount: snapshot.data.docs.length,
                     itemBuilder: ((context, index) {
+                      if (snapshot.data.docs[index]['saved'] >=
+                          snapshot.data.docs[index]['goal']) {
+                        DeleteGoal(snapshot.data.docs[index]['goal'],
+                            snapshot.data.docs[index]['title']);
+                      }
                       return GoalWidget(
                           title: snapshot.data.docs[index]['title'],
                           goal: snapshot.data.docs[index]['goal'],
@@ -117,7 +129,7 @@ class _GoalPageState extends State<GoalPage>
               }
             } else {
               return Container(
-                child: CircularProgressIndicator(),
+                child: Center(child: CircularProgressIndicator()),
               );
             }
           });
@@ -127,7 +139,7 @@ class _GoalPageState extends State<GoalPage>
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColor,
-        title: Text("Budget Tracker"),
+        title: Text("Goals"),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
@@ -206,7 +218,7 @@ class _GoalPageState extends State<GoalPage>
                               borderSide:
                                   BorderSide(color: AppColors.secondaryColor),
                             ),
-                            hintText: 'Amount',
+                            hintText: 'Goal Amount',
                           ),
                         ),
                         SizedBox(
@@ -231,7 +243,7 @@ class _GoalPageState extends State<GoalPage>
                               borderSide:
                                   BorderSide(color: AppColors.secondaryColor),
                             ),
-                            hintText: 'Saving Amount',
+                            hintText: 'Goal Invest Amount',
                           ),
                         ),
                         SizedBox(
@@ -264,19 +276,19 @@ class _GoalPageState extends State<GoalPage>
 Future<bool> addGoal(BuildContext context, String userid, String name,
     int goal_amount, int saved) async {
   if (saved > goal_amount) {
-    ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(content: Text("expenses cannot be greater than savings!!")));
+    ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Saved amount cannot be greater than Goal amount!!")));
     return false;
   } else if (saved <= saved) {
     await Database(uid: userid)
         .addGoal(userid, name, goal_amount, saved)
         .then((value) {
-      if (value == null) {
+      if (value != null) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Expense added.")));
+            .showSnackBar(SnackBar(content: Text("Goal added.")));
       } else {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Expense addition failed.")));
+            .showSnackBar(SnackBar(content: Text("Goal addition failed.")));
       }
     });
   }
