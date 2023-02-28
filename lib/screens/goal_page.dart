@@ -7,8 +7,6 @@ import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/goals_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class GoalPage extends StatefulWidget {
   const GoalPage({Key? key}) : super(key: key);

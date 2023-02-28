@@ -226,7 +226,7 @@ class _HomePageState extends State<HomePage>
                           changeSavingsDialog(context);
                         },
                         title: Text(
-                          'Change Savings',
+                          'Update Savings',
                           style: TextStyle(
                             fontSize: 18,
                           ),

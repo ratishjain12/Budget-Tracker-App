@@ -229,6 +229,10 @@ class _ChartPageState extends State<ChartPage> {
     ];
 
     return Scaffold(
+      appBar: AppBar(
+        title: Text('Charts'),
+        centerTitle: true,
+      ),
       body: _isLoading
           ? Center(
               child: CircularProgressIndicator(),
@@ -343,7 +347,7 @@ class _ChartPageState extends State<ChartPage> {
                                         CategoryTitle: "Life & Health",
                                       )));
                             },
-                            name: 'Life',
+                            name: 'Life & Health',
                             ic: Icon(
                               Icons.health_and_safety_rounded,
                               color: AppColors.secondaryColor,
@@ -424,7 +428,7 @@ class _ChartPageState extends State<ChartPage> {
                             ),
                           ),
                           SizedBox(
-                            width: screenWidth * 0.07,
+                            width: screenWidth * 0.05,
                           ),
                           TileWidget(
                             onTap: () {

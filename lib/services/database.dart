@@ -197,8 +197,28 @@ class Database {
   }
 
   Future updateSavings(String userid, int savings) async {
+    int prev_savings = 0;
+    DocumentSnapshot s = await userCollection.doc(userid).get();
+    prev_savings = s['monthlyincome'];
     return await userCollection.doc(userid).update({
-      'monthlyincome': savings,
+      'monthlyincome': prev_savings + savings,
     });
+  }
+
+  Future updateGoal(String userid, int saving_amt, String goal_title) async {
+    int prev_savings = 0;
+    var id;
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('goal')
+        .where('title', isEqualTo: goal_title)
+        .get();
+    prev_savings = s.docs[0]['saved'];
+    id = s.docs[0].id;
+    return await userCollection
+        .doc(userid)
+        .collection('goal')
+        .doc(id)
+        .update({'saved': prev_savings + saving_amt});
   }
 }

@@ -1,9 +1,12 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
+import 'package:budget_tracker/services/database.dart';
+import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
 
 import 'colors.dart';
 
-class GoalWidget extends StatelessWidget {
+class GoalWidget extends StatefulWidget {
   String title;
   int goal, saved;
   GoalWidget(
@@ -11,14 +14,53 @@ class GoalWidget extends StatelessWidget {
       : super(key: key);
 
   @override
+  State<GoalWidget> createState() => _GoalWidgetState();
+}
+
+class _GoalWidgetState extends State<GoalWidget>
+    with AutomaticKeepAliveClientMixin {
+  final _formKey = GlobalKey<FormState>();
+  final _addingController = TextEditingController();
+  String userid = '1';
+  @override
+  bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUserDetails();
+    super.initState();
+  }
+
+  Future getUserDetails() async {
+    await helper_function.getUserUid().then((value) {
+      if (value != null) {
+        setState(() {
+          userid = value;
+          print("userid" + userid);
+        });
+      }
+    });
+  }
+
+  @override
+  void dispose() {
+    // TODO: implement dispose
+    _addingController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     var screenHeight = MediaQuery.of(context).size.height;
     var screenWidth = MediaQuery.of(context).size.width;
-    double filledBar = saved / goal;
+    double filledBar = widget.saved / widget.goal;
     double percent = filledBar * 100;
     String perCent = percent.toStringAsPrecision(4);
-    String Goal = goal.toString();
-    String Saved = saved.toString();
+    int saved = widget.saved;
+    String Goal = widget.goal.toString();
+    String Saved = widget.saved.toString();
+
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -49,25 +91,103 @@ class GoalWidget extends StatelessWidget {
                 SizedBox(
                   height: screenHeight * 0.01,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18),
-                      child: Text(title),
-                    ),
-                    Container(
-                      height: 24,
-                      width: 24,
-                      margin: EdgeInsets.only(right: 10, top: 15),
-                      child: IconButton(
-                          onPressed: (() {}),
-                          icon: Icon(
-                            Icons.edit,
-                            size: 15,
-                          )),
-                    ),
-                  ],
+                Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18),
+                        child: Text(widget.title),
+                      ),
+                      Container(
+                        height: 24,
+                        width: 24,
+                        margin: EdgeInsets.only(
+                          right: 10,
+                        ),
+                        child: IconButton(
+                            onPressed: (() {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return StatefulBuilder(
+                                        builder: ((context, setState) {
+                                      return Center(
+                                        child: AlertDialog(
+                                          title: Text(
+                                            widget.title,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          content: Container(
+                                            height: screenHeight * 0.13,
+                                            child: Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  children: [
+                                                    TextFormField(
+                                                      controller:
+                                                          _addingController,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      validator: (value) {
+                                                        if (value == null) {
+                                                          return "Please Enter Amount";
+                                                        }
+                                                        return null;
+                                                      },
+                                                      decoration:
+                                                          InputDecoration(
+                                                        isDense: true,
+                                                        enabledBorder:
+                                                            UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: AppColors
+                                                                  .secondaryColor),
+                                                        ),
+                                                        border:
+                                                            UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                  color: Colors
+                                                                      .grey),
+                                                        ),
+                                                        hintText:
+                                                            'Saving Amount',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    CustomButton(
+                                                        child: Text('Submit'),
+                                                        onPressed: (() async {
+                                                          await Database(
+                                                                  uid: userid)
+                                                              .updateGoal(
+                                                                  userid,
+                                                                  int.parse(
+                                                                      _addingController
+                                                                          .text),
+                                                                  widget.title);
+                                                        }))
+                                                  ],
+                                                )),
+                                          ),
+                                        ),
+                                      );
+                                    }));
+                                  });
+                            }),
+                            icon: Icon(
+                              Icons.edit,
+                              size: 15,
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: screenHeight * 0.01,
@@ -77,7 +197,7 @@ class GoalWidget extends StatelessWidget {
                   children: [
                     LinearPercentIndicator(
                       animation: true,
-                      animationDuration: 1000,
+                      animationDuration: 1500,
                       width: screenWidth * 0.8,
                       progressColor: AppColors.secondaryColor,
                       backgroundColor: AppColors.primaryColor,
@@ -94,10 +214,8 @@ class GoalWidget extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
-                    SizedBox(
-                      width: screenWidth * 0.50,
-                    ),
-                    Text("$Saved / $Goal", textAlign: TextAlign.end),
+                    SizedBox(width: screenWidth * 0.65),
+                    Text("$Saved / $Goal"),
                   ],
                 ),
               ],
