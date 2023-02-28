@@ -7,8 +7,6 @@ import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:budget_tracker/widgets/goals_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
-import 'package:percent_indicator/linear_percent_indicator.dart';
 
 class GoalPage extends StatefulWidget {
   const GoalPage({Key? key}) : super(key: key);
@@ -271,9 +269,9 @@ Future<bool> addGoal(BuildContext context, String userid, String name,
     await Database(uid: userid)
         .addGoal(userid, name, goal_amount, saved)
         .then((value) {
-      if (value == null) {
+      if (value != null) {
         ScaffoldMessenger.of(context)
-            .showSnackBar(SnackBar(content: Text("Expense added.")));
+            .showSnackBar(SnackBar(content: Text("Goal added.")));
       } else {
         ScaffoldMessenger.of(context)
             .showSnackBar(SnackBar(content: Text("Expense addition failed.")));
