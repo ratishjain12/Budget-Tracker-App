@@ -177,6 +177,15 @@ class Database {
         .snapshots();
   }
 
+  Future delGoals(String userid, String GoalName, int GoalAmount) async {
+    var s = await userCollection.doc(userid).collection('goal').get();
+    for (var doc in s.docs) {
+      if (doc['title'] == GoalName && doc['goal'] == GoalAmount) {
+        await doc.reference.delete();
+      }
+    }
+  }
+
   Future clearExpenses(String userid) async {
     var s = await userCollection.doc(userid).collection('expense').get();
     for (var doc in s.docs) {
@@ -185,5 +194,31 @@ class Database {
     return await userCollection.doc(userid).update({
       'totalExpense': 0,
     });
+  }
+
+  Future updateSavings(String userid, int savings) async {
+    int prev_savings = 0;
+    DocumentSnapshot s = await userCollection.doc(userid).get();
+    prev_savings = s['monthlyincome'];
+    return await userCollection.doc(userid).update({
+      'monthlyincome': prev_savings + savings,
+    });
+  }
+
+  Future updateGoal(String userid, int saving_amt, String goal_title) async {
+    int prev_savings = 0;
+    var id;
+    QuerySnapshot s = await userCollection
+        .doc(userid)
+        .collection('goal')
+        .where('title', isEqualTo: goal_title)
+        .get();
+    prev_savings = s.docs[0]['saved'];
+    id = s.docs[0].id;
+    return await userCollection
+        .doc(userid)
+        .collection('goal')
+        .doc(id)
+        .update({'saved': prev_savings + saving_amt});
   }
 }

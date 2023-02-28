@@ -36,8 +36,10 @@ const List<String> options = <String>[
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
   bool _isLoading = false;
+  final _savingsFormKey = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
   final _expenseController = TextEditingController();
+  final _savingController = TextEditingController();
 
   String username = "1";
   QuerySnapshot? data;
@@ -220,9 +222,11 @@ class _HomePageState extends State<HomePage>
                         height: 2,
                       ),
                       ListTile(
-                        onTap: () {},
+                        onTap: () {
+                          changeSavingsDialog(context);
+                        },
                         title: Text(
-                          'Change Income',
+                          'Update Savings',
                           style: TextStyle(
                             fontSize: 18,
                           ),
@@ -234,6 +238,29 @@ class _HomePageState extends State<HomePage>
                         contentPadding:
                             EdgeInsets.symmetric(horizontal: 20, vertical: 5),
                       ),
+                      // ListTile(
+                      //   onTap: () async {
+                      //     await Database(uid: userid)
+                      //         .clearExpenses(userid)
+                      //         .then((value) {
+                      //       if (value == null) {
+                      //         fetching();
+                      //       }
+                      //     });
+                      //   },
+                      //   title: Text(
+                      //     'Generate Report',
+                      //     style: TextStyle(
+                      //       fontSize: 18,
+                      //     ),
+                      //   ),
+                      //   leading: Icon(
+                      //     Icons.book,
+                      //     color: AppColors.secondaryColor,
+                      //   ),
+                      //   contentPadding:
+                      //       EdgeInsets.symmetric(horizontal: 20, vertical: 5),
+                      // ),
                       ListTile(
                         onTap: () async {
                           await Database(uid: userid)
@@ -572,5 +599,72 @@ class _HomePageState extends State<HomePage>
       Navigator.of(context).pushReplacement(
           MaterialPageRoute(builder: (context) => Login_opt()));
     });
+  }
+
+  changeSavingsDialog(BuildContext context) {
+    return showDialog(
+        context: context,
+        builder: (context) {
+          return StatefulBuilder(builder: ((context, setState) {
+            return Center(
+              child: AlertDialog(
+                title: Text(
+                  "Update Savings",
+                  textAlign: TextAlign.center,
+                ),
+                content: Container(
+                  width: MediaQuery.of(context).size.width * 0.7,
+                  child: Form(
+                    key: _savingsFormKey,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        TextFormField(
+                          controller: _savingController,
+                          keyboardType: TextInputType.number,
+                          validator: (val) {
+                            if (val == null || val.isEmpty) {
+                              return "Please enter savings";
+                            }
+                            return null;
+                          },
+                          decoration: InputDecoration(
+                            isDense: true,
+                            enabledBorder: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: AppColors.secondaryColor),
+                            ),
+                            border: UnderlineInputBorder(
+                              borderSide:
+                                  BorderSide(color: AppColors.secondaryColor),
+                            ),
+                            hintText: 'Savings...',
+                          ),
+                        ),
+                        SizedBox(
+                          height: MediaQuery.of(context).size.height * 0.04,
+                        ),
+                        CustomButton(
+                            child: Text("Submit"),
+                            onPressed: () async {
+                              if (_savingsFormKey.currentState!.validate()) {
+                                await Database(uid: userid)
+                                    .updateSavings(userid,
+                                        int.parse(_savingController.text))
+                                    .then((value) {
+                                  if (value == null) {
+                                    Navigator.of(context).pop(fetching());
+                                  }
+                                });
+                              }
+                            }),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            );
+          }));
+        });
   }
 }

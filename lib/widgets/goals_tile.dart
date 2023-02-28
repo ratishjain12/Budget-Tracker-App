@@ -1,3 +1,5 @@
+import 'package:budget_tracker/screens/helper/helper_function.dart';
+import 'package:budget_tracker/services/database.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:flutter/material.dart';
 import 'package:percent_indicator/percent_indicator.dart';
@@ -19,20 +21,33 @@ class _GoalWidgetState extends State<GoalWidget>
     with AutomaticKeepAliveClientMixin {
   final _formKey = GlobalKey<FormState>();
   final _addingController = TextEditingController();
+  String userid = '1';
   @override
   bool get wantKeepAlive => true;
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    getUserDetails();
+    super.initState();
+  }
+
+  Future getUserDetails() async {
+    await helper_function.getUserUid().then((value) {
+      if (value != null) {
+        setState(() {
+          userid = value;
+          print("userid" + userid);
+        });
+      }
+    });
+  }
+
   @override
   void dispose() {
     // TODO: implement dispose
     _addingController.dispose();
     super.dispose();
-  }
-
-  @override
-  void initState() {
-    // TODO: implement initState
-
-    super.initState();
   }
 
   @override
@@ -76,94 +91,103 @@ class _GoalWidgetState extends State<GoalWidget>
                 SizedBox(
                   height: screenHeight * 0.01,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(left: 18),
-                      child: Text(widget.title),
-                    ),
-                    Container(
-                      height: 24,
-                      width: 24,
-                      margin: EdgeInsets.only(right: 10, top: 15),
-                      child: IconButton(
-                          onPressed: (() {
-                            showDialog(
-                                context: context,
-                                builder: (context) {
-                                  return StatefulBuilder(
-                                      builder: ((context, setState) {
-                                    return Center(
-                                      child: AlertDialog(
-                                        title: Text(
-                                          widget.title,
-                                          style: TextStyle(
-                                            fontWeight: FontWeight.bold,
+                Container(
+                  margin: EdgeInsets.only(bottom: 15),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Padding(
+                        padding: const EdgeInsets.only(left: 18),
+                        child: Text(widget.title),
+                      ),
+                      Container(
+                        height: 24,
+                        width: 24,
+                        margin: EdgeInsets.only(
+                          right: 10,
+                        ),
+                        child: IconButton(
+                            onPressed: (() {
+                              showDialog(
+                                  context: context,
+                                  builder: (context) {
+                                    return StatefulBuilder(
+                                        builder: ((context, setState) {
+                                      return Center(
+                                        child: AlertDialog(
+                                          title: Text(
+                                            widget.title,
+                                            style: TextStyle(
+                                              fontWeight: FontWeight.bold,
+                                            ),
+                                          ),
+                                          content: Container(
+                                            height: screenHeight * 0.13,
+                                            child: Form(
+                                                key: _formKey,
+                                                child: Column(
+                                                  children: [
+                                                    TextFormField(
+                                                      controller:
+                                                          _addingController,
+                                                      keyboardType:
+                                                          TextInputType.number,
+                                                      validator: (value) {
+                                                        if (value == null) {
+                                                          return "Please Enter Amount";
+                                                        }
+                                                        return null;
+                                                      },
+                                                      decoration:
+                                                          InputDecoration(
+                                                        isDense: true,
+                                                        enabledBorder:
+                                                            UnderlineInputBorder(
+                                                          borderSide: BorderSide(
+                                                              color: AppColors
+                                                                  .secondaryColor),
+                                                        ),
+                                                        border:
+                                                            UnderlineInputBorder(
+                                                          borderSide:
+                                                              BorderSide(
+                                                                  color: Colors
+                                                                      .grey),
+                                                        ),
+                                                        hintText:
+                                                            'Saving Amount',
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height: 10,
+                                                    ),
+                                                    CustomButton(
+                                                        child: Text('Submit'),
+                                                        onPressed: (() async {
+                                                          await Database(
+                                                                  uid: userid)
+                                                              .updateGoal(
+                                                                  userid,
+                                                                  int.parse(
+                                                                      _addingController
+                                                                          .text),
+                                                                  widget.title);
+                                                        }))
+                                                  ],
+                                                )),
                                           ),
                                         ),
-                                        content: Container(
-                                          height: screenHeight * 0.13,
-                                          child: Form(
-                                              key: _formKey,
-                                              child: Column(
-                                                children: [
-                                                  TextFormField(
-                                                    controller:
-                                                        _addingController,
-                                                    keyboardType:
-                                                        TextInputType.number,
-                                                    validator: (value) {
-                                                      if (value == null) {
-                                                        return "Please Enter Amount";
-                                                      }
-                                                      return null;
-                                                    },
-                                                    decoration: InputDecoration(
-                                                      isDense: true,
-                                                      enabledBorder:
-                                                          UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: AppColors
-                                                                .secondaryColor),
-                                                      ),
-                                                      border:
-                                                          UnderlineInputBorder(
-                                                        borderSide: BorderSide(
-                                                            color: Colors.grey),
-                                                      ),
-                                                      hintText: 'Saving Amount',
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    height: 10,
-                                                  ),
-                                                  CustomButton(
-                                                      child: Text('Submit'),
-                                                      onPressed: (() {
-                                                        setState(
-                                                          () {
-                                                            saved = saved +
-                                                                int.parse(
-                                                                    _addingController
-                                                                        .text);
-                                                          },
-                                                        );
-                                                      }))
-                                                ],
-                                              )),
-                                        ),
-                                      ),
-                                    );
-                                  }));
-                                });
-                          }),
-                          icon: Icon(
-                            Icons.edit,
-                            size: 15,
-                          )),
-                    ),
-                  ],
+                                      );
+                                    }));
+                                  });
+                            }),
+                            icon: Icon(
+                              Icons.edit,
+                              size: 15,
+                            )),
+                      ),
+                    ],
+                  ),
                 ),
                 SizedBox(
                   height: screenHeight * 0.01,
@@ -188,6 +212,7 @@ class _GoalWidgetState extends State<GoalWidget>
                   height: screenHeight * 0.03,
                 ),
                 Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     SizedBox(width: screenWidth * 0.65),
                     Text("$Saved / $Goal"),
