@@ -211,12 +211,14 @@ class _GoalWidgetState extends State<GoalWidget>
                 SizedBox(
                   height: screenHeight * 0.03,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
-                    SizedBox(width: screenWidth * 0.65),
-                    Text("$Saved / $Goal"),
-                  ],
+                Padding(
+                  padding: const EdgeInsets.only(right: 12.0),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      Text("$Saved / $Goal"),
+                    ],
+                  ),
                 ),
               ],
             )),

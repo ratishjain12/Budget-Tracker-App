@@ -230,7 +230,11 @@ class _ChartPageState extends State<ChartPage> {
 
     return Scaffold(
       appBar: AppBar(
-        title: Text('Charts'),
+        backgroundColor: AppColors.secondaryColor,
+        title: Text(
+          'Charts',
+          style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
+        ),
         centerTitle: true,
       ),
       body: _isLoading
