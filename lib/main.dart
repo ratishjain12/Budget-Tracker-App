@@ -49,8 +49,10 @@ class _MyAppState extends State<MyApp> {
     return MaterialApp(
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
+        fontFamily: 'Cera Pro',
         colorScheme:
             ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
+        useMaterial3: true,
       ),
       home: _isSignedIn ? const Base() : const Login_opt(),
       routes: {

@@ -183,9 +183,10 @@ class _HomePageState extends State<HomePage>
           )
         : Scaffold(
             appBar: AppBar(
+              backgroundColor: AppColors.secondaryColor,
               leading: Builder(builder: (BuildContext context) {
                 return IconButton(
-                  icon: const Icon(Icons.settings),
+                  icon: const Icon(Icons.settings, color: Colors.white),
                   onPressed: () {
                     Scaffold.of(context).openDrawer();
                   },
@@ -195,6 +196,8 @@ class _HomePageState extends State<HomePage>
               }),
               title: Text(
                 "Budget Tracker",
+                style:
+                    TextStyle(color: Colors.white, fontWeight: FontWeight.bold),
               ),
               centerTitle: true,
             ),

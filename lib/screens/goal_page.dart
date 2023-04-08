@@ -137,7 +137,8 @@ class _GoalPageState extends State<GoalPage>
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
         backgroundColor: AppColors.secondaryColor,
-        title: Text("Goals"),
+        title: Text("Goals",
+            style: TextStyle(color: Colors.white, fontWeight: FontWeight.bold)),
         centerTitle: true,
       ),
       floatingActionButton: FloatingActionButton(
