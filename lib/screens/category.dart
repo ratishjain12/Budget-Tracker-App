@@ -1,4 +1,5 @@
 import 'package:budget_tracker/services/database.dart';
+import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/expense_tile.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
@@ -40,7 +41,20 @@ class _CategoryState extends State<Category> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text(widget.CategoryTitle),
+        backgroundColor: AppColors.secondaryColor,
+        title: Text(
+          widget.CategoryTitle,
+          style: TextStyle(color: Colors.white),
+        ),
+        leading: IconButton(
+          onPressed: () {
+            Navigator.pop(context);
+          },
+          icon: const Icon(
+            Icons.arrow_back,
+            color: Colors.white,
+          ),
+        ),
         centerTitle: true,
       ),
       body: SingleChildScrollView(

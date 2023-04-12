@@ -485,7 +485,8 @@ class _HomePageState extends State<HomePage>
                           height: MediaQuery.of(context).size.height * 0.02,
                         ),
                         CustomButton(
-                            child: Text("Submit"),
+                            child: const Text("Submit",
+                                style: TextStyle(color: Colors.white)),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 if (opt == null) {
@@ -648,7 +649,8 @@ class _HomePageState extends State<HomePage>
                           height: MediaQuery.of(context).size.height * 0.04,
                         ),
                         CustomButton(
-                            child: Text("Submit"),
+                            child: const Text("Submit",
+                                style: TextStyle(color: Colors.white)),
                             onPressed: () async {
                               if (_savingsFormKey.currentState!.validate()) {
                                 await Database(uid: userid)

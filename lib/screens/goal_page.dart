@@ -249,7 +249,10 @@ class _GoalPageState extends State<GoalPage>
                           height: screenHeight * 0.02,
                         ),
                         CustomButton(
-                            child: Text("Submit"),
+                            child: const Text(
+                              "Submit",
+                              style: TextStyle(color: Colors.white),
+                            ),
                             onPressed: () async {
                               bool res = await addGoal(
                                   context,

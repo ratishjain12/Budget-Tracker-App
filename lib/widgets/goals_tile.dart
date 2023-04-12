@@ -98,7 +98,10 @@ class _GoalWidgetState extends State<GoalWidget>
                     children: [
                       Padding(
                         padding: const EdgeInsets.only(left: 18),
-                        child: Text(widget.title),
+                        child: Text(
+                          widget.title,
+                          style: TextStyle(fontSize: 19),
+                        ),
                       ),
                       Container(
                         height: 24,
