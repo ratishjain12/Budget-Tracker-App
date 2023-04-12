@@ -221,4 +221,9 @@ class Database {
         .doc(id)
         .update({'saved': prev_savings + saving_amt});
   }
+
+  Future checkUserSavingMode(String userId) async {
+    DocumentSnapshot s = await userCollection.doc(userId).get();
+    return s["savingmode"];
+  }
 }

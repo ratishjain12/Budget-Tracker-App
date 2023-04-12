@@ -21,20 +21,20 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-const List<String> options = <String>[
-  "Food & Drinks",
-  "Shopping",
-  "Housing",
-  "Life & Health",
-  "Investments",
-  "Vehicle & Transportation",
-  "Entertainment",
-  "Groceries",
-  "Other",
-];
-
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  List<String> options = <String>[
+    "Food & Drinks",
+    "Shopping",
+    "Housing",
+    "Life & Health",
+    "Investments",
+    "Vehicle & Transportation",
+    "Entertainment",
+    "Groceries",
+    "Other",
+  ];
+
   bool _isLoading = false;
   final _savingsFormKey = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
@@ -45,6 +45,7 @@ class _HomePageState extends State<HomePage>
   QuerySnapshot? data;
   int totalExpense = 0;
   int monthlyIncome = 0;
+  String SavingMode = "";
   Stream<QuerySnapshot>? expenseUsers;
 
   String userid = "1";
@@ -56,11 +57,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     // TODO: implement initState
+
+    super.initState();
     getUserDetails();
     fetching();
     fetchUserExpenses();
-
-    super.initState();
   }
 
   Future getUserDetails() async {
@@ -82,6 +83,12 @@ class _HomePageState extends State<HomePage>
             expenseUsers = value;
           });
         }
+      });
+      await Database(uid: userid).checkUserSavingMode(userid).then((value) {
+        setState(() {
+          SavingMode = value;
+          print(SavingMode);
+        });
       });
     });
   }
@@ -578,6 +585,24 @@ class _HomePageState extends State<HomePage>
   Future<bool> addExpense(
       BuildContext context, String userid, int expense, String category) async {
     int savings = monthlyIncome - totalExpense;
+    int afterSavings = monthlyIncome - (totalExpense + expense);
+    if (SavingMode == "Moderate Savings") {
+      num expenseMode = monthlyIncome * 0.25;
+      if (afterSavings < expenseMode) {
+        Fluttertoast.showToast(
+            msg: "Warning: Expense limit exceeded ",
+            backgroundColor: Colors.red);
+      }
+    } else if (SavingMode == "Hard Savings") {
+      num expenseMode = monthlyIncome * 0.4;
+      if (afterSavings < expenseMode) {
+        Fluttertoast.showToast(
+            msg: "Warning: Expense limit exceeded ",
+            backgroundColor: Colors.red);
+      }
+    } else if (SavingMode == "null") {
+    } else {}
+
     if (expense > savings) {
       ScaffoldMessenger.of(context).showSnackBar(
           SnackBar(content: Text("expenses cannot be greater than savings!!")));
@@ -612,7 +637,7 @@ class _HomePageState extends State<HomePage>
           return StatefulBuilder(builder: ((context, setState) {
             return Center(
               child: AlertDialog(
-                title: Text(
+                title: const Text(
                   "Update Savings",
                   textAlign: TextAlign.center,
                 ),
@@ -632,7 +657,7 @@ class _HomePageState extends State<HomePage>
                             }
                             return null;
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             isDense: true,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
