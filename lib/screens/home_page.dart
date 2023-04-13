@@ -21,20 +21,20 @@ class HomePage extends StatefulWidget {
   State<HomePage> createState() => _HomePageState();
 }
 
-const List<String> options = <String>[
-  "Food & Drinks",
-  "Shopping",
-  "Housing",
-  "Life & Health",
-  "Investments",
-  "Vehicle & Transportation",
-  "Entertainment",
-  "Groceries",
-  "Other",
-];
-
 class _HomePageState extends State<HomePage>
     with AutomaticKeepAliveClientMixin {
+  List<String> options = <String>[
+    "Food & Drinks",
+    "Shopping",
+    "Housing",
+    "Life & Health",
+    "Investments",
+    "Vehicle & Transportation",
+    "Entertainment",
+    "Groceries",
+    "Other",
+  ];
+
   bool _isLoading = false;
   final _savingsFormKey = GlobalKey<FormState>();
   final _formKey = GlobalKey<FormState>();
@@ -42,9 +42,11 @@ class _HomePageState extends State<HomePage>
   final _savingController = TextEditingController();
 
   String username = "1";
+  int amountSave = 0;
   QuerySnapshot? data;
   int totalExpense = 0;
   int monthlyIncome = 0;
+  String SavingMode = "";
   Stream<QuerySnapshot>? expenseUsers;
 
   String userid = "1";
@@ -56,11 +58,11 @@ class _HomePageState extends State<HomePage>
   @override
   void initState() {
     // TODO: implement initState
+
+    super.initState();
     getUserDetails();
     fetching();
     fetchUserExpenses();
-
-    super.initState();
   }
 
   Future getUserDetails() async {
@@ -82,6 +84,12 @@ class _HomePageState extends State<HomePage>
             expenseUsers = value;
           });
         }
+      });
+      await Database(uid: userid).checkUserSavingMode(userid).then((value) {
+        setState(() {
+          SavingMode = value;
+          print(SavingMode);
+        });
       });
     });
   }
@@ -127,6 +135,7 @@ class _HomePageState extends State<HomePage>
               username = data!.docs[0]['username'];
               totalExpense = data!.docs[0]['totalExpense'];
               monthlyIncome = data!.docs[0]['monthlyincome'];
+              amountSave = data!.docs[0]['amountSave'];
             });
           } else {
             setState(() {
@@ -485,7 +494,8 @@ class _HomePageState extends State<HomePage>
                           height: MediaQuery.of(context).size.height * 0.02,
                         ),
                         CustomButton(
-                            child: Text("Submit"),
+                            child: const Text("Submit",
+                                style: TextStyle(color: Colors.white)),
                             onPressed: () async {
                               if (_formKey.currentState!.validate()) {
                                 if (opt == null) {
@@ -577,9 +587,34 @@ class _HomePageState extends State<HomePage>
   Future<bool> addExpense(
       BuildContext context, String userid, int expense, String category) async {
     int savings = monthlyIncome - totalExpense;
+    int afterSavings = monthlyIncome - (totalExpense + expense);
+    if (SavingMode == "Moderate Savings") {
+      num expenseMode = monthlyIncome * 0.25;
+      if (afterSavings < expenseMode) {
+        Fluttertoast.showToast(
+            msg: "Warning: Expense limit exceeded ",
+            backgroundColor: Colors.red);
+      }
+    } else if (SavingMode == "Hard Savings") {
+      num expenseMode = monthlyIncome * 0.4;
+      if (afterSavings < expenseMode) {
+        Fluttertoast.showToast(
+            msg: "Warning: Expense limit exceeded ",
+            backgroundColor: Colors.red);
+      }
+    } else if (SavingMode == "null") {
+    } else {
+      if (afterSavings < amountSave) {
+        Fluttertoast.showToast(
+            msg:
+                "Warning: your current savings is below \n\u{20B9} ${amountSave}",
+            backgroundColor: Colors.red);
+      }
+    }
+
     if (expense > savings) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("expenses cannot be greater than savings!!")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("expenses cannot be greater than savings!!")));
       return false;
     } else if (expense <= monthlyIncome) {
       await Database(uid: userid)
@@ -587,10 +622,10 @@ class _HomePageState extends State<HomePage>
           .then((value) {
         if (value == null) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Expense added.")));
+              .showSnackBar(const SnackBar(content: Text("Expense added.")));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Expense addition failed.")));
+              const SnackBar(content: Text("Expense addition failed.")));
         }
       });
     }
@@ -611,7 +646,7 @@ class _HomePageState extends State<HomePage>
           return StatefulBuilder(builder: ((context, setState) {
             return Center(
               child: AlertDialog(
-                title: Text(
+                title: const Text(
                   "Update Savings",
                   textAlign: TextAlign.center,
                 ),
@@ -631,7 +666,7 @@ class _HomePageState extends State<HomePage>
                             }
                             return null;
                           },
-                          decoration: InputDecoration(
+                          decoration: const InputDecoration(
                             isDense: true,
                             enabledBorder: UnderlineInputBorder(
                               borderSide:
@@ -648,7 +683,8 @@ class _HomePageState extends State<HomePage>
                           height: MediaQuery.of(context).size.height * 0.04,
                         ),
                         CustomButton(
-                            child: Text("Submit"),
+                            child: const Text("Submit",
+                                style: TextStyle(color: Colors.white)),
                             onPressed: () async {
                               if (_savingsFormKey.currentState!.validate()) {
                                 await Database(uid: userid)

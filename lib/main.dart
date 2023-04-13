@@ -50,8 +50,8 @@ class _MyAppState extends State<MyApp> {
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         fontFamily: 'Cera Pro',
-        colorScheme:
-            ColorScheme.light().copyWith(primary: AppColors.secondaryColor),
+        colorScheme: const ColorScheme.light()
+            .copyWith(primary: AppColors.secondaryColor),
         useMaterial3: true,
       ),
       home: _isSignedIn ? const Base() : const Login_opt(),

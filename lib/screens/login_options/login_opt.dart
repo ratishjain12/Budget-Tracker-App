@@ -81,8 +81,7 @@ class _Login_optState extends State<Login_opt> {
                                 Text(
                                   'E-mail',
                                   style: TextStyle(
-                                    fontSize: 17,
-                                  ),
+                                      fontSize: 17, color: Colors.white),
                                 ),
                               ],
                             ),
@@ -110,7 +109,8 @@ class _Login_optState extends State<Login_opt> {
                                 ),
                                 Text(
                                   'Sign in with google',
-                                  style: TextStyle(fontSize: 17),
+                                  style: TextStyle(
+                                      fontSize: 17, color: Colors.white),
                                 )
                               ],
                             ),

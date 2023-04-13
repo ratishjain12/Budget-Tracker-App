@@ -97,7 +97,8 @@ class _QueState extends State<Que> {
                               width: 300,
                               child: Text(
                                 'Next',
-                                style: TextStyle(fontSize: 17),
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
                               ),
                               onPressed: (() {
                                 FocusScope.of(context)
@@ -152,7 +153,8 @@ class _QueState extends State<Que> {
                               width: 300,
                               child: Text(
                                 'Submit',
-                                style: TextStyle(fontSize: 17),
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
                               ),
                               onPressed: (() async {
                                 if (checkForChoice()) {
@@ -244,7 +246,8 @@ class _QueState extends State<Que> {
                               width: 300,
                               child: Text(
                                 'Done',
-                                style: TextStyle(fontSize: 17),
+                                style: TextStyle(
+                                    fontSize: 17, color: Colors.white),
                               ),
                               onPressed: (() async {
                                 if (dropdownValue == "Custom Savings") {
@@ -300,7 +303,12 @@ class _QueState extends State<Que> {
                                                             0.02,
                                                   ),
                                                   CustomButton(
-                                                      child: Text("Submit"),
+                                                      child: const Text(
+                                                        "Submit",
+                                                        style: TextStyle(
+                                                            color:
+                                                                Colors.white),
+                                                      ),
                                                       onPressed: () async {
                                                         if (_formKey
                                                             .currentState!
