@@ -28,6 +28,7 @@ class _SignUpState extends State<SignUp> {
     var screenHeight = MediaQuery.of(context).size.height;
     return Scaffold(
       appBar: AppBar(
+        surfaceTintColor: AppColors.secondaryColor,
         backgroundColor: Colors.transparent,
         iconTheme: IconThemeData(color: Colors.black),
         elevation: 0.0,
@@ -129,10 +130,13 @@ class _SignUpState extends State<SignUp> {
                               height: screenHeight * 0.03,
                             ),
                             TextFormField(
+                              style: const TextStyle(
+                                letterSpacing: 2,
+                              ),
                               controller: _password,
                               obscureText: _isObscured,
                               decoration: InputDecoration(
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.lock,
                                   color: Colors.grey,
                                 ),
@@ -164,10 +168,11 @@ class _SignUpState extends State<SignUp> {
                               onPressed: () {
                                 register(context);
                               },
-                              child: Text(
+                              child: const Text(
                                 "Sign up",
                                 style: TextStyle(
                                   fontSize: 17,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),

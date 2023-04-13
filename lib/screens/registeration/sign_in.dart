@@ -31,6 +31,7 @@ class _SignInState extends State<SignIn> {
     return Scaffold(
       backgroundColor: AppColors.primaryColor,
       appBar: AppBar(
+        surfaceTintColor: AppColors.secondaryColor,
         elevation: 0.0,
         iconTheme: IconThemeData(color: Colors.black),
         backgroundColor: Colors.transparent,
@@ -101,7 +102,7 @@ class _SignInState extends State<SignIn> {
                                 border: OutlineInputBorder(
                                   borderRadius: BorderRadius.circular(18),
                                 ),
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.email,
                                   color: Colors.grey,
                                 ),
@@ -112,6 +113,9 @@ class _SignInState extends State<SignIn> {
                               height: screenHeight * 0.03,
                             ),
                             TextFormField(
+                              style: const TextStyle(
+                                letterSpacing: 2,
+                              ),
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "please enter password";
@@ -121,7 +125,7 @@ class _SignInState extends State<SignIn> {
                               controller: _password,
                               obscureText: _isObscured,
                               decoration: InputDecoration(
-                                prefixIcon: Icon(
+                                prefixIcon: const Icon(
                                   Icons.lock,
                                   color: Colors.grey,
                                 ),
@@ -157,10 +161,11 @@ class _SignInState extends State<SignIn> {
                               onPressed: () {
                                 login(context);
                               },
-                              child: Text(
+                              child: const Text(
                                 "Login",
                                 style: TextStyle(
                                   fontSize: 17,
+                                  color: Colors.white,
                                 ),
                               ),
                             ),
@@ -168,7 +173,7 @@ class _SignInState extends State<SignIn> {
                               onPressed: () {
                                 Navigator.pushNamed(context, '/signup');
                               },
-                              child: Text("Dont have a account? Sign up"),
+                              child: const Text("Dont have a account? Sign up"),
                             )
                           ],
                         ),
