@@ -86,6 +86,9 @@ class _SignUpState extends State<SignUp> {
                               height: screenHeight * 0.05,
                             ),
                             TextFormField(
+                              style: const TextStyle(
+                                letterSpacing: 2,
+                              ),
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "username cannot be empty";
@@ -108,6 +111,9 @@ class _SignUpState extends State<SignUp> {
                               height: screenHeight * 0.03,
                             ),
                             TextFormField(
+                              style: const TextStyle(
+                                letterSpacing: 2,
+                              ),
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "email cannot be empty";

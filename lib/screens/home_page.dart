@@ -42,6 +42,7 @@ class _HomePageState extends State<HomePage>
   final _savingController = TextEditingController();
 
   String username = "1";
+  int amountSave = 0;
   QuerySnapshot? data;
   int totalExpense = 0;
   int monthlyIncome = 0;
@@ -134,6 +135,7 @@ class _HomePageState extends State<HomePage>
               username = data!.docs[0]['username'];
               totalExpense = data!.docs[0]['totalExpense'];
               monthlyIncome = data!.docs[0]['monthlyincome'];
+              amountSave = data!.docs[0]['amountSave'];
             });
           } else {
             setState(() {
@@ -601,11 +603,18 @@ class _HomePageState extends State<HomePage>
             backgroundColor: Colors.red);
       }
     } else if (SavingMode == "null") {
-    } else {}
+    } else {
+      if (afterSavings < amountSave) {
+        Fluttertoast.showToast(
+            msg:
+                "Warning: your current savings is below \n\u{20B9} ${amountSave}",
+            backgroundColor: Colors.red);
+      }
+    }
 
     if (expense > savings) {
-      ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text("expenses cannot be greater than savings!!")));
+      ScaffoldMessenger.of(context).showSnackBar(const SnackBar(
+          content: Text("expenses cannot be greater than savings!!")));
       return false;
     } else if (expense <= monthlyIncome) {
       await Database(uid: userid)
@@ -613,10 +622,10 @@ class _HomePageState extends State<HomePage>
           .then((value) {
         if (value == null) {
           ScaffoldMessenger.of(context)
-              .showSnackBar(SnackBar(content: Text("Expense added.")));
+              .showSnackBar(const SnackBar(content: Text("Expense added.")));
         } else {
           ScaffoldMessenger.of(context).showSnackBar(
-              SnackBar(content: Text("Expense addition failed.")));
+              const SnackBar(content: Text("Expense addition failed.")));
         }
       });
     }

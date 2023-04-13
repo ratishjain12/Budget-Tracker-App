@@ -91,6 +91,9 @@ class _SignInState extends State<SignIn> {
                               height: screenHeight * 0.05,
                             ),
                             TextFormField(
+                              style: const TextStyle(
+                                letterSpacing: 2,
+                              ),
                               validator: (val) {
                                 if (val == null || val.isEmpty) {
                                   return "please enter email";
