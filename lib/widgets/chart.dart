@@ -20,7 +20,6 @@ class ChartWidget extends StatefulWidget {
 
 class _ChartWidgetState extends State<ChartWidget> {
   List<ChartData>? _chartData;
-  TooltipBehavior? _tooltipBehaviour;
 
   @override
   void initState() {
@@ -40,7 +39,6 @@ class _ChartWidgetState extends State<ChartWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _tooltipBehaviour = TooltipBehavior(enable: true);
     _chartData = getData();
     return SfCircularChart(
       palette: widget.chartColor,

@@ -1,14 +1,10 @@
-import 'dart:ffi';
-
 import 'package:budget_tracker/screens/helper/helper_function.dart';
-import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/services/database.dart';
 import 'package:budget_tracker/widgets/colors.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 const List<String> options = <String>[
   "Hard Savings",
@@ -116,7 +112,7 @@ class _QueState extends State<Que> {
                   child: Column(
                     children: <Widget>[
                       SizedBox(
-                        height: screenHeight * 0.30,
+                        height: screenHeight * 0.25,
                       ),
                       Container(
                         width: 300,

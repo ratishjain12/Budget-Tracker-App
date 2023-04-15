@@ -2,7 +2,6 @@ import 'package:budget_tracker/screens/helper/helper_function.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
-import 'package:fluttertoast/fluttertoast.dart';
 
 import '../../widgets/colors.dart';
 import '../../widgets/custom_button.dart';

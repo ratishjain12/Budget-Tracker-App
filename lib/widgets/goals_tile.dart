@@ -125,7 +125,7 @@ class _GoalWidgetState extends State<GoalWidget>
                                             ),
                                           ),
                                           content: Container(
-                                            height: screenHeight * 0.13,
+                                            height: screenHeight * 0.15,
                                             child: Form(
                                                 key: _formKey,
                                                 child: Column(
@@ -165,6 +165,7 @@ class _GoalWidgetState extends State<GoalWidget>
                                                       height: 10,
                                                     ),
                                                     CustomButton(
+                                                        height: 52,
                                                         child: Text('Submit'),
                                                         onPressed: (() async {
                                                           await Database(
@@ -219,7 +220,7 @@ class _GoalWidgetState extends State<GoalWidget>
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.end,
                     children: [
-                      Text("$Saved / $Goal"),
+                      Text("₹ $Saved / ₹ $Goal"),
                     ],
                   ),
                 ),

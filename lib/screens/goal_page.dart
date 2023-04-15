@@ -21,7 +21,6 @@ class _GoalPageState extends State<GoalPage>
   final _goalController = TextEditingController();
   final _savingController = TextEditingController();
   String userid = "1";
-  bool _isalive = false;
   Stream<QuerySnapshot>? userGoals;
 
   @override
@@ -167,7 +166,7 @@ class _GoalPageState extends State<GoalPage>
                   textAlign: TextAlign.center,
                 ),
                 content: Container(
-                  width: MediaQuery.of(context).size.width * 0.7,
+                  width: MediaQuery.of(context).size.width * 0.75,
                   child: Form(
                     key: _formKey,
                     child: Column(

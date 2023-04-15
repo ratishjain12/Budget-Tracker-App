@@ -1,13 +1,10 @@
 import 'package:budget_tracker/screens/base.dart';
 import 'package:budget_tracker/screens/helper/helper_function.dart';
-import 'package:budget_tracker/screens/home_page.dart';
 import 'package:budget_tracker/screens/login_options/questions.dart';
 import 'package:budget_tracker/services/auth_service.dart';
 import 'package:budget_tracker/widgets/custom_button.dart';
-import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
 import 'package:budget_tracker/widgets/colors.dart';
-import 'package:google_sign_in/google_sign_in.dart';
 
 class Login_opt extends StatefulWidget {
   const Login_opt({Key? key}) : super(key: key);
@@ -114,27 +111,36 @@ class _Login_optState extends State<Login_opt> {
                                 )
                               ],
                             ),
-                            onPressed: (() {
+                            onPressed: (() async {
                               setState(() {
                                 _isLoading = true;
                               });
-                              authservice.googleSignin().whenComplete(() async {
-                                await helper_function
-                                    .getUserOnboaringInstance()
-                                    .then((value) async {
-                                  if (value == true) {
-                                    await helper_function
-                                        .saveUserLoggedInStatus(true);
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) => Base()));
-                                  } else {
-                                    _isLoading = false;
-                                    Navigator.of(context).pushReplacement(
-                                        MaterialPageRoute(
-                                            builder: (context) => Que()));
-                                  }
-                                });
+                              await authservice
+                                  .googleSignin()
+                                  .then((value) async {
+                                if (value == false) {
+                                  Navigator.of(context).pushReplacement(
+                                      MaterialPageRoute(
+                                          builder: (context) =>
+                                              const Login_opt()));
+                                } else {
+                                  await helper_function
+                                      .getUserOnboaringInstance()
+                                      .then((value) async {
+                                    if (value == true) {
+                                      await helper_function
+                                          .saveUserLoggedInStatus(true);
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) => Base()));
+                                    } else {
+                                      _isLoading = false;
+                                      Navigator.of(context).pushReplacement(
+                                          MaterialPageRoute(
+                                              builder: (context) => Que()));
+                                    }
+                                  });
+                                }
                               });
                             }),
                           ),
